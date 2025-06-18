@@ -1,6 +1,10 @@
 #ifndef tda_h
 #define tda_h
 
+typedef struct Graph Graph;
+
+
+
 typedef struct {
     char nombre[50];
     char categoria[30];

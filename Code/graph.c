@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../DelarationCode/tda.h"
+#include "graph.h"
+
+
 
 void inicializar_lista(ListaProductos *lista) {
     lista->cabeza = NULL;
