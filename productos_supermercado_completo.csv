@@ -1,0 +1,201 @@
+id_producto,nombre_producto,categoria,precio_producto,precio_producto_mercado,cantidad_producto,proveedor,precio_costo,codigo_barras
+1,Arroz,Comestibles,36.31,39.41,49,Unilever Chile,23.41,4258914480259
+2,Fideos,Comestibles,30.88,35.4,81,Soprole S.A.,26.05,8485442120418
+3,Pan,Comestibles,8.22,7.63,11,Carozzi S.A.,6.11,9205157094490
+4,Leche,Comestibles,2.6,2.58,100,Coca-Cola Andina,1.64,7507950858162
+5,Queso,Comestibles,9.18,10.59,43,PepsiCo Chile,7.69,2469178691125
+6,Jamón,Comestibles,35.28,38.72,66,JDE Chile,24.8,9479322157111
+7,Huevos,Comestibles,12.19,11.74,92,Kimberly-Clark,7.36,6258158727752
+8,Manzana,Comestibles,35.79,38.99,45,JDE Chile,25.15,2834522460010
+9,Plátano,Comestibles,13.15,12.4,93,Watts S.A.,10.68,7093464559505
+10,Naranja,Comestibles,49.63,50.35,72,Colún Ltda.,32.55,1666896758281
+11,Pera,Comestibles,48.0,50.99,96,Soprole S.A.,40.03,4384623075423
+12,Zanahoria,Comestibles,29.23,30.51,86,PF Alimentos,21.54,4154858928884
+13,Papa,Comestibles,32.31,29.09,72,Nestlé Chile S.A.,19.72,6257262104448
+14,Tomate,Comestibles,14.94,15.82,98,Watts S.A.,12.23,8100020739032
+15,Cebolla,Comestibles,38.98,37.24,42,JDE Chile,23.73,6494592486745
+16,Aceite,Comestibles,20.56,22.35,63,Empresas Ariztía,17.43,7718063759214
+17,Azúcar,Comestibles,12.74,15.23,70,Colún Ltda.,9.23,7529577123448
+18,Sal,Comestibles,28.32,32.18,73,Johnson & Johnson,23.44,7600057420646
+19,Harina,Comestibles,4.04,4.56,35,Colún Ltda.,2.77,3999422224349
+20,Pollo,Comestibles,6.68,7.79,72,Colún Ltda.,5.52,6186576085215
+21,Carne de vacuno,Comestibles,27.65,28.2,27,Colún Ltda.,16.68,7393580700925
+22,Pescado,Comestibles,15.52,18.06,94,Johnson & Johnson,11.41,7102324232177
+23,Yogur,Comestibles,27.93,32.91,14,Empresas Ariztía,21.7,7276033082500
+24,Mantequilla,Comestibles,4.48,4.62,95,Kimberly-Clark,3.69,3729669448503
+25,Galletas,Comestibles,44.9,43.13,67,Colún Ltda.,30.35,2661259797431
+26,Cereal,Comestibles,39.62,42.59,29,Duracell Inc.,32.62,9086687428864
+27,Café,Comestibles,47.51,43.8,78,Nestlé Chile S.A.,32.31,9664401086977
+28,Té,Comestibles,30.96,28.38,54,Colún Ltda.,19.58,4158957636335
+29,Shampoo,Higiene,28.07,30.33,23,Johnson & Johnson,21.56,1890573096036
+30,Jabón,Higiene,10.29,10.84,38,Coca-Cola Andina,8.43,4362101048336
+31,Pasta dental,Higiene,32.61,37.69,89,PepsiCo Chile,19.58,2410704956250
+32,Cepillo de dientes,Higiene,13.9,14.14,22,PF Alimentos,8.43,7185824498553
+33,Desodorante,Higiene,44.5,45.08,81,JDE Chile,27.08,6604767077787
+34,Papel higiénico,Higiene,41.19,42.35,18,Unilever Chile,34.23,1455193530987
+35,Toallas femeninas,Higiene,48.47,55.1,11,Agrosuper,35.46,6577346199147
+36,Detergente,Limpieza,5.28,5.2,80,Duracell Inc.,3.47,1274470997681
+37,Desinfectante,Limpieza,42.31,39.33,17,Nestlé Chile S.A.,29.32,3442540986222
+38,Esponja,Limpieza,30.38,31.38,61,Unilever Chile,23.78,1612057759719
+39,Cloro,Limpieza,7.95,8.59,55,Unilever Chile,5.5,5792627935941
+40,Limpiavidrios,Limpieza,34.13,37.81,42,PepsiCo Chile,25.05,3016694623923
+41,Lavaloza,Limpieza,5.1,5.47,25,Nestlé Chile S.A.,3.15,4056757075858
+42,Sartén,Cocina,39.04,46.45,83,Empresas Ariztía,30.41,4639817751295
+43,Olla,Cocina,1.5,1.56,98,Unilever Chile,0.93,4212633091441
+44,Taza medidora,Cocina,3.05,2.94,31,Coca-Cola Andina,2.09,4220006009922
+45,Cuchillo,Cocina,14.13,12.97,89,Empresas Ariztía,10.49,9823804615034
+46,Tabla de picar,Cocina,13.67,15.74,18,Empresas Ariztía,9.26,2017514424634
+47,Rallador,Cocina,23.31,25.88,34,Watts S.A.,17.22,2716543623602
+48,Hervidor,Electrodomésticos,37.42,39.86,20,Johnson & Johnson,24.09,9755152939174
+49,Microondas,Electrodomésticos,35.17,39.28,84,Coca-Cola Andina,28.86,9114059775323
+50,Refrigerador,Electrodomésticos,22.71,21.84,75,Nestlé Chile S.A.,18.4,2171682745453
+51,Licuadora,Electrodomésticos,46.41,51.4,56,Nestlé Chile S.A.,32.0,5774989476869
+52,Tostadora,Electrodomésticos,22.05,21.22,89,Empresas Ariztía,13.88,5371329694669
+53,Pilas,Otros,45.14,52.88,39,Watts S.A.,33.6,4040874661641
+54,Bolsa de basura,Otros,45.17,47.9,79,Coca-Cola Andina,27.8,7513664438937
+55,Encendedor,Otros,2.39,2.41,84,Coca-Cola Andina,1.78,1283458866621
+56,Servilletas,Otros,20.54,21.57,27,Soprole S.A.,14.3,6357898453419
+57,Fósforos,Otros,24.58,23.65,12,Colún Ltda.,19.73,1374229459425
+58,Azúcar (marca B),Comestibles,2.57,2.4,84,Nestlé Chile S.A.,1.8,8853343742156
+59,Cebolla (marca C),Comestibles,32.08,29.47,41,Empresas Ariztía,21.03,2168167766743
+60,Pan (marca A),Comestibles,45.27,42.39,11,Kimberly-Clark,32.9,8446245241613
+61,Tomate (marca A),Comestibles,34.96,41.89,58,Kimberly-Clark,22.49,6731005316394
+62,Galletas (marca B),Comestibles,29.54,30.17,65,JDE Chile,24.57,2675460194987
+63,Cebolla (marca C),Comestibles,34.75,31.5,68,Kimberly-Clark,28.5,3692671968069
+64,Azúcar (marca B),Comestibles,21.14,24.93,99,Johnson & Johnson,14.3,8717158282669
+65,Jamón (marca B),Comestibles,25.13,24.71,68,Soprole S.A.,18.22,1184018525761
+66,Azúcar (marca B),Comestibles,48.66,54.68,35,Johnson & Johnson,39.4,8992928189192
+67,Queso (marca C),Comestibles,4.86,4.46,100,Johnson & Johnson,3.44,5640237681452
+68,Pollo (marca A),Comestibles,0.61,0.71,48,Watts S.A.,0.5,5378338842668
+69,Carne de vacuno (marca C),Comestibles,36.75,42.01,57,Kimberly-Clark,22.56,9789742318477
+70,Cebolla (marca B),Comestibles,18.35,21.91,57,Watts S.A.,13.25,8734755852270
+71,Pollo (marca C),Comestibles,29.57,29.18,46,Johnson & Johnson,24.49,1055055709405
+72,Huevos (marca A),Comestibles,27.49,28.62,50,Unilever Chile,21.03,8378755319066
+73,Pera (marca C),Comestibles,27.5,27.93,54,JDE Chile,21.36,6761665056523
+74,Carne de vacuno (marca C),Comestibles,19.08,20.08,34,JDE Chile,13.72,5785516026552
+75,Fideos (marca C),Comestibles,10.88,11.17,98,Watts S.A.,7.98,2778740114774
+76,Fideos (marca A),Comestibles,13.63,14.05,18,Unilever Chile,9.86,7012246728944
+77,Harina (marca B),Comestibles,22.62,24.0,77,Colún Ltda.,19.1,8671850130081
+78,Manzana (marca A),Comestibles,39.15,37.52,79,Empresas Ariztía,31.87,4846475917190
+79,Cereal (marca A),Comestibles,0.51,0.56,30,Empresas Ariztía,0.32,7870524112874
+80,Jamón (marca C),Comestibles,9.34,10.6,89,Unilever Chile,6.16,3347012361338
+81,Pan (marca B),Comestibles,43.58,40.8,26,Duracell Inc.,27.21,9879729016002
+82,Té (marca A),Comestibles,11.1,12.79,66,Colún Ltda.,8.53,4897557747791
+83,Carne de vacuno (marca B),Comestibles,32.29,31.61,21,Agrosuper,20.75,7881814402436
+84,Papa (marca C),Comestibles,44.9,52.01,100,Johnson & Johnson,32.87,6239742522998
+85,Galletas (marca B),Comestibles,10.65,10.23,78,Soprole S.A.,7.63,6870511457926
+86,Zanahoria (marca C),Comestibles,35.51,38.47,80,PepsiCo Chile,28.11,2722995185888
+87,Pera (marca C),Comestibles,24.35,23.86,92,Agrosuper,18.24,8784746866488
+88,Aceite (marca C),Comestibles,8.28,8.27,27,Agrosuper,5.29,3991338371215
+89,Huevos (marca B),Comestibles,5.29,5.35,40,PepsiCo Chile,3.77,2373489028644
+90,Carne de vacuno (marca A),Comestibles,25.4,26.89,91,Coca-Cola Andina,20.19,2411117550036
+91,Yogur (marca C),Comestibles,10.01,9.09,63,PF Alimentos,8.25,9492658802780
+92,Pescado (marca B),Comestibles,41.2,39.02,16,Empresas Ariztía,27.08,3715749413847
+93,Zanahoria (marca B),Comestibles,38.57,39.78,56,Duracell Inc.,26.41,9611013134185
+94,Cebolla (marca A),Comestibles,16.91,19.7,77,Kimberly-Clark,14.24,9858302164345
+95,Yogur (marca A),Comestibles,35.52,32.09,50,Duracell Inc.,28.0,8756794905111
+96,Pera (marca A),Comestibles,20.49,18.68,38,JDE Chile,16.27,4255876499193
+97,Queso (marca A),Comestibles,22.3,23.73,77,Colún Ltda.,17.34,9087020989146
+98,Jamón (marca C),Comestibles,8.67,8.56,67,Nestlé Chile S.A.,5.59,1677732586649
+99,Galletas (marca A),Comestibles,42.01,43.48,60,Soprole S.A.,29.79,6724080433856
+100,Jamón (marca A),Comestibles,12.24,11.98,75,Kimberly-Clark,7.4,7932381158036
+101,Café (marca C),Comestibles,0.7,0.67,32,Duracell Inc.,0.57,8135276548040
+102,Cereal (marca B),Comestibles,33.5,38.83,97,Johnson & Johnson,24.82,7136902478171
+103,Pescado (marca C),Comestibles,38.86,36.58,29,PepsiCo Chile,25.92,2893425451967
+104,Galletas (marca A),Comestibles,18.32,21.01,50,Agrosuper,14.33,3006449147640
+105,Fideos (marca C),Comestibles,22.04,20.17,99,Coca-Cola Andina,16.58,7573657323526
+106,Leche (marca C),Comestibles,28.69,34.2,31,PF Alimentos,18.14,6009527118259
+107,Manzana (marca C),Comestibles,16.23,16.67,78,Nestlé Chile S.A.,10.84,3059962785116
+108,Cebolla (marca A),Comestibles,37.58,36.67,40,JDE Chile,24.21,4922039381455
+109,Azúcar (marca C),Comestibles,14.86,15.41,16,Kimberly-Clark,10.19,2999739784257
+110,Aceite (marca A),Comestibles,6.48,6.11,94,Watts S.A.,4.43,4088380261469
+111,Cebolla (marca C),Comestibles,9.42,9.3,72,Coca-Cola Andina,7.14,1736951270085
+112,Manzana (marca C),Comestibles,42.26,46.58,24,Kimberly-Clark,31.89,5624082201385
+113,Carne de vacuno (marca A),Comestibles,43.01,41.2,38,PF Alimentos,28.3,2351336164622
+114,Azúcar (marca A),Comestibles,37.38,44.56,52,PF Alimentos,23.04,7776006731653
+115,Azúcar (marca C),Comestibles,2.61,2.65,81,PF Alimentos,1.59,5175990759146
+116,Carne de vacuno (marca C),Comestibles,41.54,43.63,24,PF Alimentos,28.64,5700023247375
+117,Aceite (marca A),Comestibles,27.14,30.94,53,Johnson & Johnson,18.27,3277105621313
+118,Fideos (marca C),Comestibles,2.28,2.5,61,Johnson & Johnson,1.91,9972133947130
+119,Café (marca C),Comestibles,30.73,36.1,46,Agrosuper,20.24,2792551711349
+120,Zanahoria (marca B),Comestibles,20.55,21.11,17,Carozzi S.A.,13.01,6047977348108
+121,Shampoo (Ambrosoli),Higiene,53.49,50.04,17,Kimberly-Clark,43.19,9646041167919
+122,Sartén (Pepsi),Cocina,79.52,73.03,85,Kimberly-Clark,59.52,2852165975806
+123,Papel higiénico (Coca-Cola),Higiene,32.2,34.55,61,Unilever Chile,21.02,1453582872019
+124,Cebolla (Tottus),Comestibles,15.0,17.75,24,Carozzi S.A.,9.94,9281309556968
+125,Cuchillo (San Jorge),Cocina,19.99,23.15,94,Colún Ltda.,12.02,2313229345679
+126,Pilas (Capel),Otros,78.67,79.03,11,Carozzi S.A.,53.72,1216235899658
+127,Yogur (San Jorge),Comestibles,12.7,13.02,45,PF Alimentos,9.91,5201742129365
+128,Cereal (Lucchetti),Comestibles,38.96,37.03,79,Duracell Inc.,24.71,3488996269584
+129,Tostadora (Unimarc),Electrodomésticos,0.55,0.64,11,Kimberly-Clark,0.46,6256487866313
+130,Desodorante (Lucchetti),Higiene,79.98,74.62,96,Soprole S.A.,62.52,8274908585248
+131,Mantequilla (Lider),Comestibles,78.2,78.12,79,PF Alimentos,55.93,2586669113263
+132,Leche (Colún),Comestibles,90.04,99.36,86,Kimberly-Clark,65.66,3005404120483
+133,Pan (Soprole),Comestibles,39.01,41.43,31,Nestlé Chile S.A.,29.84,1173291408570
+134,Licuadora (Ballerina),Electrodomésticos,17.61,18.85,30,PepsiCo Chile,14.47,4018271755979
+135,Bolsa de basura (Unimarc),Otros,23.86,21.49,26,Coca-Cola Andina,17.97,2683232494519
+136,Pan (Energizer),Comestibles,36.32,35.82,70,Johnson & Johnson,28.01,5356254387334
+137,Microondas (Escudo),Electrodomésticos,15.96,17.0,84,Colún Ltda.,11.1,8225865579229
+138,Papel higiénico (Tottus),Higiene,38.55,44.29,13,Empresas Ariztía,30.59,5592620545440
+139,Zanahoria (Dos Alamos),Comestibles,54.63,55.43,25,PF Alimentos,33.12,4667820304815
+140,Bolsa de basura (Dos Alamos),Otros,50.43,45.68,74,Coca-Cola Andina,34.81,2193725295568
+141,Pan (Watts),Comestibles,41.26,45.88,88,Johnson & Johnson,32.86,2117962050435
+142,Yogur (Ideal),Comestibles,68.48,63.84,47,Johnson & Johnson,58.1,6024101486417
+143,Carne de vacuno (PF),Comestibles,74.63,73.57,56,Empresas Ariztía,61.38,7930005242273
+144,Detergente (Soprole),Limpieza,79.69,77.23,96,Soprole S.A.,66.5,1288402885160
+145,Arroz (Coca-Cola),Comestibles,9.69,9.5,10,Carozzi S.A.,8.01,7499721383651
+146,Limpiavidrios (Lucchetti),Limpieza,87.14,102.15,80,PepsiCo Chile,66.6,6532287292097
+147,Tomate (San Jorge),Comestibles,94.03,87.71,79,Watts S.A.,66.33,2487040894412
+148,Plátano (Costa),Comestibles,29.51,28.4,26,Carozzi S.A.,19.63,8151033130150
+149,Tomate (Escudo),Comestibles,36.33,32.73,71,Agrosuper,26.15,9317479303166
+150,Naranja (La Fête),Comestibles,53.0,59.01,88,Johnson & Johnson,33.42,8946302450924
+151,Sal (Lucchetti),Comestibles,51.39,53.19,35,Kimberly-Clark,34.84,2828437317544
+152,Cloro (Nestlé),Limpieza,40.08,40.34,21,Duracell Inc.,31.16,8059260309921
+153,Pollo (Unimarc),Comestibles,16.77,19.4,34,Agrosuper,12.69,9989154884718
+154,Pilas (San Jorge),Otros,60.64,58.39,29,JDE Chile,40.07,4345536942593
+155,Pera (Pepsi),Comestibles,99.98,102.34,37,Duracell Inc.,63.8,4822539770488
+156,Toallas femeninas (Duracell),Higiene,14.42,13.17,47,Agrosuper,11.13,4971123877021
+157,Esponja (Duracell),Limpieza,20.15,23.86,37,Unilever Chile,12.18,9323638559460
+158,Huevos (Carozzi),Comestibles,31.12,34.31,95,Empresas Ariztía,21.91,5808757764596
+159,Mantequilla (Ballerina),Comestibles,55.75,51.99,56,Unilever Chile,34.6,9169179485049
+160,Pilas (Nestlé),Otros,65.97,62.51,54,Carozzi S.A.,52.05,4591492807716
+161,Pescado (Lider),Comestibles,10.43,10.33,21,Nestlé Chile S.A.,7.11,8709433418506
+162,Cereal (Jumbo),Comestibles,61.24,60.76,100,Empresas Ariztía,48.46,1741647640891
+163,Cuchillo (Capel),Cocina,69.93,74.29,68,Soprole S.A.,50.48,1491571220084
+164,Té (Cristal),Comestibles,61.71,69.77,100,Colún Ltda.,49.11,7492436601511
+165,Pera (PF),Comestibles,61.38,56.32,73,JDE Chile,48.45,5338879086315
+166,Arroz (Watts),Comestibles,57.81,63.95,97,Johnson & Johnson,47.2,7536130064794
+167,Fideos (Super Pollo),Comestibles,3.35,3.41,50,PF Alimentos,2.59,9116018967164
+168,Plátano (Soprole),Comestibles,87.63,96.82,93,PepsiCo Chile,57.32,1333795224862
+169,Limpiavidrios (Dos Alamos),Limpieza,28.01,33.4,11,Johnson & Johnson,21.13,5310718658574
+170,Licuadora (Duracell),Electrodomésticos,66.9,67.11,83,Soprole S.A.,47.93,5089071316082
+171,Harina (Energizer),Comestibles,98.39,91.96,77,Empresas Ariztía,83.53,4369157625147
+172,Pollo (Colún),Comestibles,76.04,85.34,20,Johnson & Johnson,47.19,5553968102300
+173,Cebolla (Capel),Comestibles,68.83,67.02,83,JDE Chile,42.91,7189274697347
+174,Plátano (Costa),Comestibles,13.46,13.46,47,Coca-Cola Andina,8.6,7310197723648
+175,Papa (Lucchetti),Comestibles,15.07,14.79,65,Watts S.A.,12.29,3403628688722
+176,Taza medidora (Super Pollo),Cocina,67.06,75.02,11,Empresas Ariztía,46.74,2073484594022
+177,Refrigerador (Nestlé),Electrodomésticos,43.95,46.44,54,Duracell Inc.,30.7,6631163364926
+178,Lavaloza (Escudo),Limpieza,35.8,41.28,23,Nestlé Chile S.A.,21.51,1819056773324
+179,Naranja (Lucchetti),Comestibles,62.44,66.13,44,Watts S.A.,38.2,3864875743999
+180,Servilletas (Lider),Otros,72.72,65.93,29,Carozzi S.A.,52.46,3826260352465
+181,Cloro (La Fête),Limpieza,24.95,28.18,53,Johnson & Johnson,21.03,5911332402300
+182,Tabla de picar (Dos Alamos),Cocina,25.92,29.65,92,Colún Ltda.,20.57,9134506795179
+183,Pasta dental (Pepsi),Higiene,94.23,108.27,67,Johnson & Johnson,60.87,9660164086468
+184,Cuchillo (Tottus),Cocina,72.54,85.93,76,Unilever Chile,46.82,3357911871410
+185,Licuadora (Pepsi),Electrodomésticos,95.56,98.08,56,PepsiCo Chile,62.39,1930277792955
+186,Tabla de picar (Tottus),Cocina,14.16,14.78,79,Johnson & Johnson,10.12,8471186422984
+187,Fósforos (Nestlé),Otros,63.13,74.09,50,Empresas Ariztía,45.57,7689123198605
+188,Fósforos (Dos Alamos),Otros,95.02,110.26,51,Watts S.A.,61.72,4092305625836
+189,Tomate (Cristal),Comestibles,14.77,17.48,11,Duracell Inc.,11.59,9148507752766
+190,Sartén (Pepsi),Cocina,52.27,57.35,47,Soprole S.A.,41.92,4830273400220
+191,Desinfectante (Ideal),Limpieza,31.95,38.08,51,Watts S.A.,24.12,4005543538783
+192,Servilletas (Ambrosoli),Otros,98.27,102.4,59,Agrosuper,62.9,4428302426433
+193,Azúcar (Capel),Comestibles,8.48,9.68,34,PF Alimentos,5.76,2008866628149
+194,Limpiavidrios (PF),Limpieza,79.87,80.99,34,Empresas Ariztía,49.65,5935444454397
+195,Fósforos (Unimarc),Otros,67.03,66.41,89,PF Alimentos,46.14,2261159128743
+196,Taza medidora (Lider),Cocina,58.05,54.1,83,Colún Ltda.,49.24,6168336147232
+197,Yogur (Tottus),Comestibles,60.38,69.09,17,Colún Ltda.,47.22,5084248482201
+198,Manzana (PF),Comestibles,91.76,86.24,68,Nestlé Chile S.A.,55.82,1018133332984
+199,Mantequilla (Lucchetti),Comestibles,31.02,33.66,28,Kimberly-Clark,19.03,7291488027143
+200,Taza medidora (Escudo),Cocina,99.53,117.24,88,Empresas Ariztía,65.13,5427003357603
