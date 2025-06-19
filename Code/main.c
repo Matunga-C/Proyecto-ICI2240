@@ -47,7 +47,7 @@ void mostrarMenuCliente() {
 
 void cargarInventario(HashMap *productosPorNombre, HashMap *productosPorCodigo , HashMap *productosPorCategoria) {
     limpiarPantalla();
-    FILE *file = fopen("productos_supermercado_completo.csv", "r");
+    FILE *file = fopen("productos_supermercado_500_limpio.csv", "r");
     if (file == NULL) {
         perror(
             "Error al abrir el archivo"); // Informa si el archivo no puede abrirse
@@ -67,10 +67,15 @@ void cargarInventario(HashMap *productosPorNombre, HashMap *productosPorCodigo ,
         producto->precioVenta = atof(campos[4]); // Convierte el precio de venta a float
         producto->precioMercado = atof(campos[5]); // Convierte el precio de mercado a float
         producto->precioCosto = atof(campos[6]); // Convierte el precio de costo a float 
-
-        insertMap(productosPorNombre, producto->nombre, producto);
-        insertMap(productosPorCodigo, producto->codigoBarras, producto);
-        insertMap(productosPorCategoria, producto->categoria, producto);
+        if (searchMap(productosPorCodigo, producto->codigoBarras) == NULL) {
+            insertMap(productosPorCodigo, producto->codigoBarras, producto);
+        }
+        if (searchMap(productosPorNombre, producto->nombre) == NULL) {
+            insertMap(productosPorNombre, producto->nombre, producto);
+        }
+        if (searchMap(productosPorCategoria, producto->categoria) == NULL) {
+            insertMap(productosPorCategoria, producto->categoria, producto);
+        }
     }
     
     fclose(file);
