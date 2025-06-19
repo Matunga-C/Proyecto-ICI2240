@@ -197,7 +197,7 @@ void listarProductosPorCategoria(HashMap *productosPorCategoria){
         printf("Vendidos: %d\n", producto->vendidos);
         printf("-------------------------------------------------------------\n");
 
-        producto = nextList(listaProductos);
+        producto = list_next(listaProductos);
     }
 }
 
@@ -209,7 +209,7 @@ void mostrarProductosStockBajo(HashMap *productosPorCategoria) {
     Pair *pair = firstMap(productosPorCategoria);
     while (pair != NULL) {
         List *listaProductos = (List *)pair->value;
-        Producto *producto = firstList(listaProductos);
+        Producto *producto = list_first(listaProductos);
         while (producto != NULL) {
             if (producto->stock <= umbral) {
                 printf("\n");
@@ -221,7 +221,7 @@ void mostrarProductosStockBajo(HashMap *productosPorCategoria) {
                 printf("Precio Venta: %.2f\n", producto->precioVenta);
                 printf("-------------------------------------------------------------\n");
             }
-            producto = nextList(listaProductos);
+            producto = list_next(listaProductos);
         }
         pair = nextMap(productosPorCategoria);
     }
