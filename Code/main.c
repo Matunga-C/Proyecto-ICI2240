@@ -93,14 +93,14 @@ void cargarInventario(HashMap *productosPorNombre, HashMap *productosPorCodigo ,
     fclose(file);
 }
 
-void buscarProductoPorNombre(HashMap *productosPorCodigo) {
+void buscarProductoPorNombre(HashMap *productosPorNombre) {
     limpiarPantalla();
     char nombre[51];
     printf("Ingrese el nombre del producto a buscar: ");
     fgets(nombre, sizeof(nombre), stdin);
     nombre[strcspn(nombre, "\n")] = 0; // Eliminar salto de línea
 
-    Pair *pair = searchMap(productosPorCodigo, nombre);
+    Pair *pair = searchMap(productosPorNombre, nombre);
     if (pair != NULL) {
         Producto *producto = (Producto *)pair->value;
         printf("Producto encontrado:\n");
@@ -117,7 +117,7 @@ void buscarProductoPorNombre(HashMap *productosPorCodigo) {
     }
 }
 
-void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria) {
+void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre) {
     limpiarPantalla();
     Producto *producto = malloc(sizeof(Producto));
     printf("Ingrese el nombre del producto: ");
@@ -159,38 +159,26 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
     getchar(); // Limpiar buffer
 
     if (searchMap(productosPorCodigo, producto->codigoBarras) == NULL) {
+        
         insertMap(productosPorCodigo, producto->codigoBarras, producto);
+    }
+    if(searchMap(productosPorNombre, producto->nombre) == NULL) {
+        List *listaProductos = list_create();
+        list_pushBack(listaProductos, producto);
+        insertMap(productosPorNombre, producto->nombre, listaProductos);
+    } else {
+        List *listaProductos = (List *)searchMap(productosPorNombre, producto->nombre)->value;
+        list_pushBack(listaProductos, producto);
+    }
+    if ((searchMap(productosPorCategoria, producto->categoria) == NULL)) {
+        List *listaProductosCategoria = list_create();
+        list_pushBack(listaProductosCategoria, producto);
+        insertMap(productosPorCategoria, producto->categoria, listaProductosCategoria);
+    } else {
         List *listaProductosCategoria = (List *)searchMap(productosPorCategoria, producto->categoria)->value;
         list_pushBack(listaProductosCategoria, producto);
-        puts("Producto registrado exitosamente.");
     }
-}
-
-void listarProductosPorCategoria(HashMap *productosPorCategoria){
-    limpiarPaantalla();
-    char categoria[51];
-    printf("Ingrese la categoría de productos a listar: ");
-    fgets(categoria, sizeof(categoria), stdin);
-    categoria[strcspn(categoria, "\n")] = 0; // Eliminar salto de línea
-
-    Pair *pair = searchMap(productosPorCategoria, categoria);
-    if (pair == NULL) {
-        printf("No se encontraron productos en la categoría '%s'.\n", categoria);
-        return;
-    }
-
-    List *listaProductos = (List *)pair->value;
-    Producto *producto = firstList(listaProductos);
-    if (!producto) {
-        printf("No se encontraron productos en la categoría '%s'.\n", categoria);
-        return;
-    }
-    printf("Productos en la categoría '%s':\n", categoria);
-    while (producto) {
-        printf("Nombre: %s | Marca: %s | Código: %s | Stock: %d | Precio Venta: %.2f\n",
-               producto->nombre, producto->marca, producto->codigoBarras, producto->stock, producto->precioVenta);
-        producto = nextList(listaProductos);
-    }
+    puts("Producto registrado exitosamente.");
 }
 
 int main() {
@@ -219,8 +207,8 @@ int main() {
                 if (opcion == 0) break;
 
                 switch (opcion) {
-                    case 1: registrarProducto(productosPorCodigo, productosPorCategoria); break;
-                    case 2: buscarProductoPorNombre(productosPorCodigo); break;
+                    case 1: registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
+                    case 2: buscarProductoPorNombre(productosPorNombre); break;
                     case 3: listarProductosPorCategoria(productosPorCategoria); break;
                     case 4: modificarStock(productosPorCodigo); break;
                     case 5: mostrarProductosStockBajo(productosPorCategoria); break;
