@@ -166,6 +166,33 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
     }
 }
 
+void listarProductosPorCategoria(HashMap *productosPorCategoria){
+    limpiarPaantalla();
+    char categoria[51];
+    printf("Ingrese la categoría de productos a listar: ");
+    fgets(categoria, sizeof(categoria), stdin);
+    categoria[strcspn(categoria, "\n")] = 0; // Eliminar salto de línea
+
+    Pair *pair = searchMap(productosPorCategoria, categoria);
+    if (pair == NULL) {
+        printf("No se encontraron productos en la categoría '%s'.\n", categoria);
+        return;
+    }
+
+    List *listaProductos = (List *)pair->value;
+    Producto *producto = firstList(listaProductos);
+    if (!producto) {
+        printf("No se encontraron productos en la categoría '%s'.\n", categoria);
+        return;
+    }
+    printf("Productos en la categoría '%s':\n", categoria);
+    while (producto) {
+        printf("Nombre: %s | Marca: %s | Código: %s | Stock: %d | Precio Venta: %.2f\n",
+               producto->nombre, producto->marca, producto->codigoBarras, producto->stock, producto->precioVenta);
+        producto = nextList(listaProductos);
+    }
+}
+
 int main() {
     HashMap *productosPorCodigo = createMap(1000000);
     HashMap *productosPorNombre = createMap(1000000);
