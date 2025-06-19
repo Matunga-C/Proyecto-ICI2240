@@ -6,6 +6,17 @@
 #include "utils.h"
 #include "graph.h"
 
+typedef struct {
+    char nombre[50];
+    char categoria[30];
+    char codigoBarras[25];
+    int stock;
+    int precio;
+    char marca[50];
+} Producto;
+
+
+
 void mostrarMenuAdministrador() {
     printf("\n=== Menú Administrador ===\n");
     printf("1. Registrar nuevo producto\n");
