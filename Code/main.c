@@ -71,15 +71,26 @@ void cargarInventario(HashMap *productosPorNombre, HashMap *productosPorCodigo ,
             insertMap(productosPorCodigo, producto->codigoBarras, producto);
         }
         if (searchMap(productosPorNombre, producto->nombre) == NULL) {
-            insertMap(productosPorNombre, producto->nombre, producto);
+            List *listaProductos = createList();
+            list_pushBack(listaProductos, producto);
+            insertMap(productosPorNombre, producto->nombre, listaProductos);
+        }
+        else{
+            List *listaProductos = (List *)searchMap(productosPorNombre, producto->nombre)->value;
+            list_pushBack(listaProductos, producto);
         }
         if (searchMap(productosPorCategoria, producto->categoria) == NULL) {
-            insertMap(productosPorCategoria, producto->categoria, producto);
+            List *listaProductosCategoria = createList();
+            list_pushBack(listaProductosCategoria, producto);
+            insertMap(productosPorCategoria, producto->categoria, listaProductosCategoria);
+        }
+        else {
+            List *listaProductosCategoria = (List *)searchMap(productosPorCategoria, producto->categoria)->value;
+            list_pushBack(listaProductosCategoria, producto);
         }
     }
-    
+    puts("Inventario cargado exitosamente.");
     fclose(file);
-    printf("Inventario cargado exitosamente.\n");
 }
 
 int main() {
