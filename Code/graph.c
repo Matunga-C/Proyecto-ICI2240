@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "graph.h"
@@ -134,4 +134,4 @@ void liberar_mapa(MapaProductos *mapa) {
     }
     free(mapa->tabla);
     free(mapa);
-}
+}*/

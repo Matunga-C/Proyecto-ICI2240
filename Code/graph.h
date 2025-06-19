@@ -1,4 +1,4 @@
-#ifndef tda_h
+/*#ifndef tda_h
 #define tda_h
 
 typedef struct Graph Graph;
@@ -48,4 +48,4 @@ Producto* buscar_mapa(MapaProductos *mapa, const char *clave);
 void eliminar_mapa(MapaProductos *mapa, const char *clave);
 void liberar_mapa(MapaProductos *mapa);
 
-#endif
+#endif*/

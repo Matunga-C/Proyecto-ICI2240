@@ -18,7 +18,13 @@ typedef struct {
     char marca[51];
 } Producto;
 
+void limpiarPantalla() { system("clear"); }
 
+void presioneTeclaParaContinuar() {
+    puts("Presione una tecla para continuar...");
+    getchar(); // Consume el '\n' del buffer de entrada
+    getchar(); // Espera a que el usuario presione una tecla
+}
 
 void mostrarMenuAdministrador() {
     printf("\n=== Menú Administrador ===\n");
@@ -49,49 +55,76 @@ void cargarInventario(HashMap *productosPorNombre, HashMap *productosPorCodigo ,
     limpiarPantalla();
     FILE *file = fopen("productos_supermercado_500_limpio.csv", "r");
     if (file == NULL) {
-        perror(
-            "Error al abrir el archivo"); // Informa si el archivo no puede abrirse
+        perror("Error al abrir el archivo");
         return;
-      }
-    
+    }
     char **campos;
+    // Leer encabezado
     campos = leer_linea_csv(file, ',');
 
     while ((campos = leer_linea_csv(file, ',')) != NULL) {
-        Producto *producto = (Producto *) malloc(sizeof(Producto));
-        strcpy(producto->nombre, campos[1]);   
-        strcpy(producto->marca, campos[2]);   
-        strcpy(producto->categoria, campos[3]);
-        strcpy(producto->codigoBarras, campos[8]);
-        producto->stock = atoi(campos[7]); // Convierte el stock a entero
-        producto->precioVenta = atof(campos[4]); // Convierte el precio de venta a float
-        producto->precioMercado = atof(campos[5]); // Convierte el precio de mercado a float
-        producto->precioCosto = atof(campos[6]); // Convierte el precio de costo a float 
-        
-        Pair *pair = searchMap(productosPorCodigo, producto->codigoBarras);
-        if (pair == NULL) {
+        // Verifica que existan todos los campos necesarios
+        if (!campos[1] || !campos[2] || !campos[3] || !campos[4] ||
+            !campos[5] || !campos[6] || !campos[7] || !campos[8]) {
+            // Si tu función leer_linea_csv usa memoria dinámica, libera aquí
+            // free(campos);
+            continue;
+        }
+
+        Producto *producto = malloc(sizeof(Producto));
+        if (!producto) {
+            perror("No se pudo asignar memoria para producto");
+            // free(campos);
+            continue;
+        }
+
+        strncpy(producto->nombre, campos[1], sizeof(producto->nombre) - 1);
+        producto->nombre[sizeof(producto->nombre) - 1] = '\0';
+
+        strncpy(producto->marca, campos[2], sizeof(producto->marca) - 1);
+        producto->marca[sizeof(producto->marca) - 1] = '\0';
+
+        strncpy(producto->categoria, campos[3], sizeof(producto->categoria) - 1);
+        producto->categoria[sizeof(producto->categoria) - 1] = '\0';
+
+        strncpy(producto->codigoBarras, campos[8], sizeof(producto->codigoBarras) - 1);
+        producto->codigoBarras[sizeof(producto->codigoBarras) - 1] = '\0';
+
+        producto->stock = atoi(campos[7]);
+        producto->precioVenta = atof(campos[4]);
+        producto->precioMercado = atof(campos[5]);
+        producto->precioCosto = atof(campos[6]);
+        producto->vendidos = 0;
+
+        // Insertar en productosPorCodigo
+        if (searchMap(productosPorCodigo, producto->codigoBarras) == NULL) {
             insertMap(productosPorCodigo, producto->codigoBarras, producto);
         }
+
+        // Insertar en productosPorNombre
         Pair *pairNombre = searchMap(productosPorNombre, producto->nombre);
         if (pairNombre == NULL) {
-            List *listaProductos = createList();
+            List *listaProductos = list_create();
             list_pushBack(listaProductos, producto);
             insertMap(productosPorNombre, producto->nombre, listaProductos);
-        }
-        else{
-            List *listaProductos = (List *)searchMap(productosPorNombre, producto->nombre)->value;
+        } else {
+            List *listaProductos = (List *)pairNombre->value;
             list_pushBack(listaProductos, producto);
         }
+
+        // Insertar en productosPorCategoria
         Pair *pairCategoria = searchMap(productosPorCategoria, producto->categoria);
         if (pairCategoria == NULL) {
-            List *listaProductosCategoria = createList();
+            List *listaProductosCategoria = list_create();
             list_pushBack(listaProductosCategoria, producto);
             insertMap(productosPorCategoria, producto->categoria, listaProductosCategoria);
-        }
-        else {
-            List *listaProductosCategoria = (List *)searchMap(productosPorCategoria, producto->categoria)->value;
+        } else {
+            List *listaProductosCategoria = (List *)pairCategoria->value;
             list_pushBack(listaProductosCategoria, producto);
         }
+
+        // Si tu función leer_linea_csv usa memoria dinámica, libera aquí
+        // free(campos);
     }
     puts("Inventario cargado exitosamente.");
     fclose(file);
@@ -102,27 +135,38 @@ void buscarProductoPorNombre(HashMap *productosPorNombre) {
     char nombre[51];
     printf("Ingrese el nombre del producto a buscar: ");
     fgets(nombre, sizeof(nombre), stdin);
-    nombre[strcspn(nombre, "\n")] = 0; // Eliminar salto de línea
+    nombre[strcspn(nombre, "\n")] = 0;
 
     Pair *pair = searchMap(productosPorNombre, nombre);
     if (pair != NULL) {
-        Producto *producto = (Producto *)pair->value;
-        printf("Producto encontrado:\n");
-        printf("Nombre: %s\n", producto->nombre);
-        printf("Marca: %s\n", producto->marca);
-        printf("Categoría: %s\n", producto->categoria);
-        printf("Código de barras: %s\n", producto->codigoBarras);
-        printf("Stock: %d\n", producto->stock);
-        printf("Precio de venta: %.2f\n", producto->precioVenta);
-        printf("Precio de mercado: %.2f\n", producto->precioMercado);
-        printf("Precio de costo: %.2f\n", producto->precioCosto);
+        List *listaProductos = (List *)pair->value;
+        Producto *producto = (Producto *)list_first(listaProductos);
+        if (!producto) {
+            puts("No se encontraron productos con ese nombre.");
+            return;
+        }
+        while (producto != NULL) {
+            printf("\n");
+            printf("Nombre: %s\n", producto->nombre);
+            printf("Marca: %s\n", producto->marca);
+            printf("Categoría: %s\n", producto->categoria);
+            printf("Código de barras: %s\n", producto->codigoBarras);
+            printf("Stock: %d\n", producto->stock);
+            printf("Precio de venta: %.2f\n", producto->precioVenta);
+            printf("Precio de mercado: %.2f\n", producto->precioMercado);
+            printf("Precio de costo: %.2f\n", producto->precioCosto);
+            printf("Vendidos: %d\n", producto->vendidos);
+            printf("-----------------------------\n");
+
+            producto = list_next(listaProductos);
+        } 
     } else {
         puts("Producto no encontrado.");
     }
 }
 
 void listarProductosPorCategoria(HashMap *productosPorCategoria){
-    limpiarPaantalla();
+    limpiarPantalla();
     char categoria[51];
     printf("Ingrese la categoría de productos a listar: ");
     fgets(categoria, sizeof(categoria), stdin);
@@ -135,7 +179,7 @@ void listarProductosPorCategoria(HashMap *productosPorCategoria){
     }
 
     List *listaProductos = (List *)pair->value;
-    Producto *producto = firstList(listaProductos);
+    Producto *producto = list_first(listaProductos);
     if (!producto) {
         printf("No se encontraron productos en la categoría '%s'.\n", categoria);
         return;
@@ -144,7 +188,7 @@ void listarProductosPorCategoria(HashMap *productosPorCategoria){
     while (producto) {
         printf("Nombre: %s | Marca: %s | Código: %s | Stock: %d | Precio Venta: %.2f\n",
                producto->nombre, producto->marca, producto->codigoBarras, producto->stock, producto->precioVenta);
-        producto = nextList(listaProductos);
+        producto = list_next(listaProductos);
     }
 }
 
@@ -216,8 +260,8 @@ int main() {
     HashMap *productosPorCodigo = createMap(1000000);
     HashMap *productosPorNombre = createMap(1000000);
     HashMap *productosPorCategoria = createMap(1000000);
-    Graph *grafoCompras = createGraph();
-    List *carrito = createList();
+    //Graph *grafoCompras = createGraph();
+    List *carrito = list_create();
     
     int opcion, tipoUsuario;
     while (1) {
@@ -241,16 +285,16 @@ int main() {
                     case 1: registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
                     case 2: buscarProductoPorNombre(productosPorNombre); break;
                     case 3: listarProductosPorCategoria(productosPorCategoria); break;
-                    case 4: modificarStock(productosPorCodigo); break;
+                    /*case 4: modificarStock(productosPorCodigo); break;
                     case 5: mostrarProductosStockBajo(productosPorCategoria); break;
                     case 6: eliminarProducto(productosPorCodigo, productosPorCategoria); break;
-                    case 7: guardarInventario(productosPorCodigo); break;
+                    case 7: guardarInventario(productosPorCodigo); break;*/
                     case 8: cargarInventario(productosPorNombre,productosPorCodigo ,productosPorCategoria); break;
-                    case 9: generarReporte(productosPorCodigo); break;
+                    //case 9: generarReporte(productosPorCodigo); break;
                     default: printf("Opción no válida.\n");
                 }
             }
-        } else if (tipoUsuario == 2) {
+        }/* else if (tipoUsuario == 2) {
             while (1) {
                 mostrarMenuCliente();
                 scanf("%d", &opcion);
@@ -266,16 +310,16 @@ int main() {
                     default: printf("Opción no válida.\n");
                 }
             }
-        } else {
+        } */else {
             printf("Tipo de usuario no válido.\n");
         }
     }
 
     // Liberar memoria
-    freeMap(productosPorCodigo);
-    freeMap(productosPorCategoria);
-    freeGraph(grafoCompras);
-    freeList(carrito);
+    map_clean(productosPorCodigo);
+    map_clean(productosPorCategoria);
+    //freeGraph(grafoCompras);
+    list_clean(carrito);
     //hola como estas
     return 0;
 }
