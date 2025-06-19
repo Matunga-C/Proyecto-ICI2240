@@ -93,6 +93,79 @@ void cargarInventario(HashMap *productosPorNombre, HashMap *productosPorCodigo ,
     fclose(file);
 }
 
+void buscarProductoPorNombre(HashMap *productosPorCodigo) {
+    limpiarPantalla();
+    char nombre[51];
+    printf("Ingrese el nombre del producto a buscar: ");
+    fgets(nombre, sizeof(nombre), stdin);
+    nombre[strcspn(nombre, "\n")] = 0; // Eliminar salto de línea
+
+    Pair *pair = searchMap(productosPorCodigo, nombre);
+    if (pair != NULL) {
+        Producto *producto = (Producto *)pair->value;
+        printf("Producto encontrado:\n");
+        printf("Nombre: %s\n", producto->nombre);
+        printf("Marca: %s\n", producto->marca);
+        printf("Categoría: %s\n", producto->categoria);
+        printf("Código de barras: %s\n", producto->codigoBarras);
+        printf("Stock: %d\n", producto->stock);
+        printf("Precio de venta: %.2f\n", producto->precioVenta);
+        printf("Precio de mercado: %.2f\n", producto->precioMercado);
+        printf("Precio de costo: %.2f\n", producto->precioCosto);
+    } else {
+        puts("Producto no encontrado.");
+    }
+}
+
+void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria) {
+    limpiarPantalla();
+    Producto *producto = malloc(sizeof(Producto));
+    printf("Ingrese el nombre del producto: ");
+    fgets(producto->nombre, sizeof(producto->nombre), stdin);
+    producto->nombre[strcspn(producto->nombre, "\n")] = 0; // Eliminar salto de línea
+
+    printf("Ingrese la marca del producto: ");
+    fgets(producto->marca, sizeof(producto->marca), stdin);
+    producto->marca[strcspn(producto->marca, "\n")] = 0; // Eliminar salto de línea
+
+    printf("Ingrese la categoría del producto: ");
+    fgets(producto->categoria, sizeof(producto->categoria), stdin);
+    producto->categoria[strcspn(producto->categoria, "\n")] = 0; // Eliminar salto de línea
+
+    printf("Ingrese el código de barras del producto: ");
+    fgets(producto->codigoBarras, sizeof(producto->codigoBarras), stdin);
+    producto->codigoBarras[strcspn(producto->codigoBarras, "\n")] = 0; // Eliminar salto de línea
+
+    if (searchMap(productosPorCodigo, producto->codigoBarras) != NULL) {
+        puts("El código de barras ya existe. No se puede registrar el producto.");
+        free(producto);
+        return;
+    }
+    
+    printf("Ingrese el stock del producto: ");
+    scanf("%d", &producto->stock);
+    getchar(); // Limpiar buffer
+
+    printf("Ingrese el precio de venta del producto: ");
+    scanf("%f", &producto->precioVenta);
+    getchar(); // Limpiar buffer
+
+    printf("Ingrese el precio de mercado del producto: ");
+    scanf("%f", &producto->precioMercado);
+    getchar(); // Limpiar buffer
+
+    printf("Ingrese el precio de costo del producto: ");
+    scanf("%f", &producto->precioCosto);
+    getchar(); // Limpiar buffer
+
+    if (searchMap(productosPorCodigo, producto->codigoBarras) == NULL) {
+        insertMap(productosPorCodigo, producto->codigoBarras, producto);
+        List *listaProductosCategoria = (List *)searchMap(productosPorCategoria, producto->categoria)->value;
+        list_pushBack(listaProductosCategoria, producto);
+        puts("Producto registrado exitosamente.");
+    }
+}
+
 int main() {
     HashMap *productosPorCodigo = createMap(1000000);
     HashMap *productosPorNombre = createMap(1000000);
