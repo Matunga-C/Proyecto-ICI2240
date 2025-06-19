@@ -205,7 +205,7 @@ void mostrarProductosStockBajo(HashMap *productosPorCategoria) {
     limpiarPantalla();
     int umbral = 15;
 
-    printf("Productos con stock bajo (<= %d):\n", umbral);
+    printf("Productos con stock <= %d:\n", umbral);
     Pair *pair = firstMap(productosPorCategoria);
     while (pair != NULL) {
         List *listaProductos = (List *)pair->value;
