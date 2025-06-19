@@ -7,12 +7,15 @@
 #include "graph.h"
 
 typedef struct {
-    char nombre[50];
-    char categoria[30];
-    char codigoBarras[25];
+    char nombre[51];
+    char categoria[51];
+    char codigoBarras[51];
     int stock;
-    int precio;
-    char marca[50];
+    float precioVenta;
+    float precioMercado;
+    float precioCosto;
+    int vendidos;
+    char marca[51];
 } Producto;
 
 
@@ -42,7 +45,40 @@ void mostrarMenuCliente() {
     printf("Seleccione una opción: ");
 }
 
+void cargarInventario(HashMap *productosPorNombre, HashMap *productosPorCodigo , HashMap *productosPorCategoria) {
+    limpiarPantalla();
+    FILE *file = fopen("productos_supermercado_completo.csv", "r");
+    if (file == NULL) {
+        perror(
+            "Error al abrir el archivo"); // Informa si el archivo no puede abrirse
+        return;
+      }
+    
+    char **campos;
+    campos = leer_linea_csv(file, ',');
+
+    while ((campos = leer_linea_csv(file, ',')) != NULL) {
+        Producto *producto = malloc(sizeof(Producto));
+        strcpy(producto->nombre, campos[1]); // Almacena el id de la funckion utilizando la funcion strcpy para copiar el string       
+        strcpy(producto->marca, campos[2]); // Almacena el nombre del album utilizando la funcion strcpy para copiar el string     
+        strcpy(producto->categoria, campos[3]); // Almacena el nombre de la cancion utilizando la funcion strcpy para copiar el string
+        strcpy(producto->codigoBarras, campos[8]);
+        producto->stock = atoi(campos[7]); // Convierte el stock a entero
+        producto->precioVenta = atof(campos[4]); // Convierte el precio de venta a float
+        producto->precioMercado = atof(campos[5]); // Convierte el precio de mercado a float
+        producto->precioCosto = atof(campos[6]); // Convierte el precio de costo a float 
+
+        insertMap(productosPorNombre, producto->nombre, producto);
+        insertMap(productosPorCodigo, producto->codigoBarras, producto);
+        insertMap(productosPorCategoria, producto->categoria, producto);
+    }
+    
+    fclose(file);
+    printf("Inventario cargado exitosamente.\n");
+}
+
 int main() {
+    HashMap *productosPorCodigo = createMap(1000000);
     HashMap *productosPorNombre = createMap(1000000);
     HashMap *productosPorCategoria = createMap(1000000);
     Graph *grafoCompras = createGraph();
@@ -67,15 +103,15 @@ int main() {
                 if (opcion == 0) break;
 
                 switch (opcion) {
-                    case 1: registrarProducto(productosPorNombre, productosPorCategoria); break;
-                    case 2: buscarProductoPorNombre(productosPorNombre); break;
+                    case 1: registrarProducto(productosPorCodigo, productosPorCategoria); break;
+                    case 2: buscarProductoPorNombre(productosPorCodigo); break;
                     case 3: listarProductosPorCategoria(productosPorCategoria); break;
-                    case 4: modificarStock(productosPorNombre); break;
+                    case 4: modificarStock(productosPorCodigo); break;
                     case 5: mostrarProductosStockBajo(productosPorCategoria); break;
-                    case 6: eliminarProducto(productosPorNombre, productosPorCategoria); break;
-                    case 7: guardarInventario(productosPorNombre); break;
-                    case 8: cargarInventario(productosPorNombre, productosPorCategoria); break;
-                    case 9: generarReporte(productosPorNombre); break;
+                    case 6: eliminarProducto(productosPorCodigo, productosPorCategoria); break;
+                    case 7: guardarInventario(productosPorCodigo); break;
+                    case 8: cargarInventario(productosPorNombre,productosPorCodigo ,productosPorCategoria); break;
+                    case 9: generarReporte(productosPorCodigo); break;
                     default: printf("Opción no válida.\n");
                 }
             }
@@ -88,7 +124,7 @@ int main() {
                 if (opcion == 5) break;
 
                 switch (opcion) {
-                    case 1: agregarAlCarrito(productosPorNombre, carrito); break;
+                    case 1: agregarAlCarrito(productosPorCodigo, carrito); break;
                     case 2: eliminarDelCarrito(carrito); break;
                     case 3: verCarrito(carrito); break;
                     case 4: confirmarCompra(carrito, grafoCompras); break;
@@ -101,7 +137,7 @@ int main() {
     }
 
     // Liberar memoria
-    freeMap(productosPorNombre);
+    freeMap(productosPorCodigo);
     freeMap(productosPorCategoria);
     freeGraph(grafoCompras);
     freeList(carrito);
