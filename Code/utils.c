@@ -1,7 +1,6 @@
 #include "utils.h"
 #include "List.h"
 
-
 #define MAX_LINE_LENGTH 4096
 #define MAX_FIELDS      128
 
@@ -62,9 +61,6 @@ char **leer_linea_csv(FILE *archivo, char separador) {
     campos[idx] = NULL;
     return campos;
 }
-
-
-
 
 List *split_string(const char *str, const char *delim) {
   List *result = list_create();

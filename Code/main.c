@@ -291,6 +291,98 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
     puts("Producto registrado exitosamente.");
 }
 
+void modificarStock(HashMap* productosPorCodigo) {
+    limpiarPantalla();
+    char codBarra[51];
+    printf("Ingrese el código de barras del producto a modificar: ");
+    fgets(codBarra, sizeof(codBarra), stdin);
+    codBarra[strcspn(codBarra, "\n")] = 0;
+
+    Pair* pair = searchMap(productosPorCodigo, codBarra);
+    if (pair == NULL) {
+        printf("Producto no encontrado.\n");
+        return;
+    }
+    Producto* producto = (Producto*)pair->value;
+    printf("Stock actual: %d\n", producto->stock);
+    printf("Ingrese el nuevo stock: ");
+    int nuevoStock;
+    scanf("%d", &nuevoStock);
+    getchar(); // Limpiar buffer
+    producto->stock = nuevoStock;
+    printf("Stock actualizado correctamente.\n");
+}
+
+void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategoria) {
+    limpiarPantalla();
+    char codBarra[51];
+    printf("Ingrese el código de barras del producto a eliminar: ");
+    fgets(codBarra, sizeof(codBarra), stdin);
+    codBarra[strcspn(codBarra, "\n")] = 0;
+
+    Pair* pair = searchMap(productosPorCodigo, codBarra);
+    if (pair == NULL) {
+        printf("Producto no encontrado.\n");
+        return;
+    }
+    Producto* producto = (Producto*)pair->value;
+
+    // Eliminar de productosPorCategoria
+    Pair* pairCat = searchMap(productosPorCategoria, producto->categoria);
+    if (pairCat != NULL) {
+        List* lista = (List*)pairCat->value;
+        Producto* prodLista = list_first(lista);
+        int idx = 0;
+        while (prodLista != NULL) {
+            if (strcmp(prodLista->codigoBarras, codBarra) == 0) {
+                // Eliminar de la lista
+                // Mover current a la posición correcta
+                list_first(lista);
+                for (int i = 0; i < idx; i++) list_next(lista);
+                list_popCurrent(lista);
+                break;
+            }
+            prodLista = list_next(lista);
+            idx++;
+        }
+    }
+
+    // Eliminar de productosPorCodigo
+    eraseMap(productosPorCodigo, codBarra);
+
+    printf("Producto eliminado correctamente.\n");
+}
+
+void guardarInventario(HashMap* productosPorCodigo) {
+    limpiarPantalla();
+    char nombreArchivo[100] = "inventario_guardado.csv";
+    FILE* archivo = fopen(nombreArchivo, "w");
+    if (!archivo) {
+        printf("No se pudo abrir el archivo para guardar.\n");
+        return;
+    }
+    // Escribir encabezado
+    fprintf(archivo, "Nombre,Marca,Categoria,CodigoBarras,Stock,PrecioVenta,PrecioMercado,PrecioCosto,Vendidos\n");
+    Pair* pair = firstMap(productosPorCodigo);
+    while (pair != NULL) {
+        Producto* producto = (Producto*)pair->value;
+        fprintf(archivo, "%s,%s,%s,%s,%d,%.2f,%.2f,%.2f,%d\n",
+            producto->nombre,
+            producto->marca,
+            producto->categoria,
+            producto->codigoBarras,
+            producto->stock,
+            producto->precioVenta,
+            producto->precioMercado,
+            producto->precioCosto,
+            producto->vendidos
+        );
+        pair = nextMap(productosPorCodigo);
+    }
+    fclose(archivo);
+    printf("Inventario guardado en '%s'.\n", nombreArchivo);
+}
+
 int main() {
     HashMap *productosPorCodigo = createMap(2000);
     HashMap *productosPorNombre = createMap(2000);
@@ -320,10 +412,10 @@ int main() {
                     case 1: registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
                     case 2: buscarProductoPorNombre(productosPorNombre); break;
                     case 3: listarProductosPorCategoria(productosPorCategoria); break;
-                    /*case 4: modificarStock(productosPorCodigo); break;*/
+                    case 4: modificarStock(productosPorCodigo); break;
                     case 5: mostrarProductosStockBajo(productosPorCategoria); break;
-                    /*case 6: eliminarProducto(productosPorCodigo, productosPorCategoria); break;
-                    case 7: guardarInventario(productosPorCodigo); break;*/
+                    case 6: eliminarProducto(productosPorCodigo, productosPorCategoria); break;
+                    case 7: guardarInventario(productosPorCodigo); break;
                     case 8: cargarInventario(productosPorNombre,productosPorCodigo ,productosPorCategoria); break;
                     //case 9: generarReporte(productosPorCodigo); break;
                     default: printf("Opción no válida.\n");
