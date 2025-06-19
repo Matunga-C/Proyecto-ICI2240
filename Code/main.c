@@ -257,9 +257,9 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
 }
 
 int main() {
-    HashMap *productosPorCodigo = createMap(1000000);
-    HashMap *productosPorNombre = createMap(1000000);
-    HashMap *productosPorCategoria = createMap(1000000);
+    HashMap *productosPorCodigo = createMap(2000);
+    HashMap *productosPorNombre = createMap(2000);
+    HashMap *productosPorCategoria = createMap(2000);
     //Graph *grafoCompras = createGraph();
     List *carrito = list_create();
     
