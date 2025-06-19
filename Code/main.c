@@ -184,11 +184,46 @@ void listarProductosPorCategoria(HashMap *productosPorCategoria){
         printf("No se encontraron productos en la categoría '%s'.\n", categoria);
         return;
     }
-    printf("Productos en la categoría '%s':\n", categoria);
+    printf("\nProductos en la categoría '%s':\n", categoria);
     while (producto) {
-        printf("Nombre: %s | Marca: %s | Código: %s | Stock: %d | Precio Venta: %.2f\n",
-               producto->nombre, producto->marca, producto->codigoBarras, producto->stock, producto->precioVenta);
-        producto = list_next(listaProductos);
+        printf("\n");
+        printf("Nombre: %s\n", producto->nombre);
+        printf("Marca: %s\n", producto->marca);
+        printf("Código de Barras: %s\n", producto->codigoBarras);
+        printf("Stock: %d\n", producto->stock);
+        printf("Precio Venta: %.2f\n", producto->precioVenta);
+        printf("Precio Mercado: %.2f\n", producto->precioMercado);
+        printf("Precio Costo: %.2f\n", producto->precioCosto);
+        printf("Vendidos: %d\n", producto->vendidos);
+        printf("-------------------------------------------------------------\n");
+
+        producto = nextList(listaProductos);
+    }
+}
+
+void mostrarProductosStockBajo(HashMap *productosPorCategoria) {
+    limpiarPantalla();
+    int umbral = 15;
+
+    printf("Productos con stock bajo (<= %d):\n", umbral);
+    Pair *pair = firstMap(productosPorCategoria);
+    while (pair != NULL) {
+        List *listaProductos = (List *)pair->value;
+        Producto *producto = firstList(listaProductos);
+        while (producto != NULL) {
+            if (producto->stock <= umbral) {
+                printf("\n");
+                printf("Categoría: %s\n", producto->categoria);
+                printf("Nombre: %s\n", producto->nombre);
+                printf("Marca: %s\n", producto->marca);
+                printf("Código de Barras: %s\n", producto->codigoBarras);
+                printf("Stock: %d\n", producto->stock);
+                printf("Precio Venta: %.2f\n", producto->precioVenta);
+                printf("-------------------------------------------------------------\n");
+            }
+            producto = nextList(listaProductos);
+        }
+        pair = nextMap(productosPorCategoria);
     }
 }
 
@@ -285,9 +320,9 @@ int main() {
                     case 1: registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
                     case 2: buscarProductoPorNombre(productosPorNombre); break;
                     case 3: listarProductosPorCategoria(productosPorCategoria); break;
-                    /*case 4: modificarStock(productosPorCodigo); break;
+                    /*case 4: modificarStock(productosPorCodigo); break;*/
                     case 5: mostrarProductosStockBajo(productosPorCategoria); break;
-                    case 6: eliminarProducto(productosPorCodigo, productosPorCategoria); break;
+                    /*case 6: eliminarProducto(productosPorCodigo, productosPorCategoria); break;
                     case 7: guardarInventario(productosPorCodigo); break;*/
                     case 8: cargarInventario(productosPorNombre,productosPorCodigo ,productosPorCategoria); break;
                     //case 9: generarReporte(productosPorCodigo); break;
