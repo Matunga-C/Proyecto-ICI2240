@@ -94,6 +94,6 @@ int main() {
     freeMap(productosPorCategoria);
     freeGraph(grafoCompras);
     freeList(carrito);
-
+    //hola como estas
     return 0;
 }
