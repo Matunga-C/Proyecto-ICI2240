@@ -1,7 +1,6 @@
 #ifndef HashMap_h
 #define HashMap_h
 
-
 typedef struct HashMap HashMap;
 
 typedef struct Pair {

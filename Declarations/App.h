@@ -1,0 +1,45 @@
+#ifndef App_h
+#define App_h
+
+#include "Map.h"
+#include "List.h"
+#include "utils.h"
+
+typedef struct {
+    char nombre[51];
+    char categoria[51];
+    char codigoBarras[51];
+    int stock;
+    float precioVenta;
+    float precioMercado;
+    float precioCosto;
+    int vendidos;
+    char marca[51];
+} Producto;
+
+
+void presioneTeclaParaContinuar();
+
+void limpiarPantalla();
+
+void mostrarMenuAdministrador();
+
+void mostrarMenuCliente();
+
+void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre);
+
+void buscarProductoPorNombre(HashMap *productosPorNombre);
+
+void modificarStock(HashMap *productosPorCodigo);
+
+void eliminarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria);
+
+void guardarInventario(HashMap *productosPorCodigo);
+
+void cargarInventario(HashMap *productosPorNombre, HashMap *productosPorCodigo, HashMap *productosPorCategoria);
+
+void listarProductosPorCategoria(HashMap *productosPorCategoria);
+
+void mostrarProductosStockBajo(HashMap *productosPorCategoria);
+
+#endif

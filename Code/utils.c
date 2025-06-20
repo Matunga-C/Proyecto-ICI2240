@@ -1,5 +1,9 @@
+#include <stdio.h>
+#include <string.h>
 #include "utils.h"
 #include "List.h"
+#include "Map.h"
+#include "App.h"
 
 #define MAX_LINE_LENGTH 4096
 #define MAX_FIELDS      128
