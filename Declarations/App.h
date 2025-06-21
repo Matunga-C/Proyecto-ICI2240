@@ -26,6 +26,10 @@ void mostrarMenuAdministrador();
 
 void mostrarMenuCliente();
 
+void menuBusqueda();
+
+void menuModificarInventario();
+
 void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre);
 
 void buscarProductoPorNombre(HashMap *productosPorNombre);
