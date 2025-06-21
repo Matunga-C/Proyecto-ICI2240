@@ -370,3 +370,92 @@ void guardarInventario(HashMap* productosPorCodigo) {
     fclose(archivo);
     printf("Inventario guardado en '%s'.\n", nombreArchivo);
 }
+
+void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito) {
+    limpiarPantalla();
+    char codigo[51];
+    printf("Ingrese el código de barras del producto a agregar: ");
+    fgets(codigo, sizeof(codigo), stdin);
+    codigo[strcspn(codigo, "\n")] = 0;
+
+    Pair *pair = searchMap(productosPorCodigo, codigo);
+    if (!pair) {
+        printf("Producto no encontrado.\n");
+        return;
+    }
+    Producto *producto = (Producto *)pair->value;
+    if (producto->stock <= 0) {
+        printf("No hay stock disponible para este producto.\n");
+        return;
+    }
+    int cantidad;
+    printf("Ingrese la cantidad a agregar: ");
+    scanf("%d", &cantidad);
+    getchar(); // Limpiar buffer
+
+    if (cantidad <= 0 || cantidad > producto->stock) {
+        printf("Cantidad inválida o insuficiente stock.\n");
+        return;
+    }
+
+    // Crear una copia del producto para el carrito (solo con los datos necesarios)
+    Producto *productoCarrito = malloc(sizeof(Producto));
+    *productoCarrito = *producto;
+    productoCarrito->stock = cantidad;
+    list_pushBack(carrito, productoCarrito);
+
+    producto->stock -= cantidad;
+    printf("Producto agregado al carrito.\n");
+
+}
+
+void eliminarDelCarrito(List *carrito) {
+    limpiarPantalla();
+    if (list_first(carrito) == NULL) {
+        printf("El carrito está vacío.\n");
+        return;
+    }
+    int idx = 0, pos, total = 0;
+    Producto *prod = list_first(carrito);
+    printf("Productos en el carrito:\n");
+    while (prod) {
+        printf("%d. %s | Marca: %s | Cantidad: %d\n", idx + 1, prod->nombre, prod->marca, prod->stock);
+        prod = list_next(carrito);
+        idx++;
+    }
+    total = idx;
+    printf("Ingrese el número del producto a eliminar: ");
+    scanf("%d", &pos);
+    getchar(); // Limpiar buffer
+
+    if (pos < 1 || pos > total) {
+        printf("Opción inválida.\n");
+        return;
+    }
+    // Volver al inicio y avanzar hasta la posición
+    list_first(carrito);
+    for (int i = 1; i < pos; i++) list_next(carrito);
+    Producto *eliminado = list_popCurrent(carrito);
+    free(eliminado);
+    printf("Producto eliminado del carrito.\n");
+}
+
+void verCarrito(List *carrito) {
+    limpiarPantalla();
+    Producto *prod = list_first(carrito);
+    if (!prod) {
+        printf("El carrito está vacío.\n");
+        return;
+    }
+    printf("Productos en el carrito:\n");
+    int idx = 1;
+    float total = 0;
+    while (prod) {
+        printf("%d. %s | Marca: %s | Cantidad: %d | Precio unitario: %.2f | Subtotal: %.2f\n",
+            idx, prod->nombre, prod->marca, prod->stock, prod->precioVenta, prod->precioVenta * prod->stock);
+        total += prod->precioVenta * prod->stock;
+        prod = list_next(carrito);
+        idx++;
+    }
+    printf("Total: %.2f\n", total);
+}

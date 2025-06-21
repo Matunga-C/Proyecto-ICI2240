@@ -42,4 +42,10 @@ void listarProductosPorCategoria(HashMap *productosPorCategoria);
 
 void mostrarProductosStockBajo(HashMap *productosPorCategoria);
 
+void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito);
+
+void eliminarDelCarrito(List *carrito);
+
+void verCarrito(List *carrito);
+
 #endif

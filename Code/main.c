@@ -46,7 +46,7 @@ int main() {
                     default: printf("Opción no válida.\n");
                 }
             }
-        }/* else if (tipoUsuario == 2) {
+        } else if (tipoUsuario == 2) {
             while (1) {
                 mostrarMenuCliente();
                 scanf("%d", &opcion);
@@ -58,11 +58,11 @@ int main() {
                     case 1: agregarAlCarrito(productosPorCodigo, carrito); break;
                     case 2: eliminarDelCarrito(carrito); break;
                     case 3: verCarrito(carrito); break;
-                    case 4: confirmarCompra(carrito, grafoCompras); break;
+                    //case 4: confirmarCompra(carrito, grafoCompras); break;
                     default: printf("Opción no válida.\n");
                 }
             }
-        } */else {
+        } else {
             printf("Tipo de usuario no válido.\n");
         }
     }
