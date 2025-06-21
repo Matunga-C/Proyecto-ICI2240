@@ -116,6 +116,7 @@ void cargarInventario(HashMap *productosPorNombre, HashMap *productosPorCodigo ,
     }
     puts("Inventario cargado exitosamente.");
     fclose(file);
+    presioneTeclaParaContinuar();
 }
 
 void buscarProductoPorNombre(HashMap *productosPorNombre) {
@@ -151,6 +152,7 @@ void buscarProductoPorNombre(HashMap *productosPorNombre) {
     } else {
         puts("Producto no encontrado.");
     }
+    presioneTeclaParaContinuar();
 }
 
 void listarProductosPorCategoria(HashMap *productosPorCategoria){
@@ -187,6 +189,7 @@ void listarProductosPorCategoria(HashMap *productosPorCategoria){
 
         producto = list_next(listaProductos);
     }
+    presioneTeclaParaContinuar();
 }
 
 void mostrarProductosStockBajo(HashMap *productosPorCategoria) {
@@ -213,6 +216,7 @@ void mostrarProductosStockBajo(HashMap *productosPorCategoria) {
         }
         pair = nextMap(productosPorCategoria);
     }
+    presioneTeclaParaContinuar();
 }
 
 void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre) {
@@ -277,6 +281,7 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
         list_pushBack(listaProductosCategoria, producto);
     }
     puts("Producto registrado exitosamente.");
+    presioneTeclaParaContinuar();
 }
 
 void modificarStock(HashMap* productosPorCodigo) {
@@ -299,6 +304,7 @@ void modificarStock(HashMap* productosPorCodigo) {
     getchar(); // Limpiar buffer
     producto->stock = nuevoStock;
     printf("Stock actualizado correctamente.\n");
+    presioneTeclaParaContinuar();
 }
 
 void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategoria) {
@@ -339,6 +345,7 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
     eraseMap(productosPorCodigo, codBarra);
 
     printf("Producto eliminado correctamente.\n");
+    presioneTeclaParaContinuar();
 }
 
 void guardarInventario(HashMap* productosPorCodigo) {
@@ -369,6 +376,7 @@ void guardarInventario(HashMap* productosPorCodigo) {
     }
     fclose(archivo);
     printf("Inventario guardado en '%s'.\n", nombreArchivo);
+    presioneTeclaParaContinuar();
 }
 
 void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito) {
@@ -406,7 +414,7 @@ void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito) {
 
     producto->stock -= cantidad;
     printf("Producto agregado al carrito.\n");
-
+    presioneTeclaParaContinuar();
 }
 
 void eliminarDelCarrito(List *carrito) {
@@ -438,6 +446,7 @@ void eliminarDelCarrito(List *carrito) {
     Producto *eliminado = list_popCurrent(carrito);
     free(eliminado);
     printf("Producto eliminado del carrito.\n");
+    presioneTeclaParaContinuar();
 }
 
 void verCarrito(List *carrito) {
@@ -458,4 +467,5 @@ void verCarrito(List *carrito) {
         idx++;
     }
     printf("Total: %.2f\n", total);
+    presioneTeclaParaContinuar();
 }
