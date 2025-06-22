@@ -81,8 +81,6 @@ void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *prod
         // Verifica que existan todos los campos necesarios
         if (!campos[1] || !campos[2] || !campos[3] || !campos[4] ||
             !campos[5] || !campos[6] || !campos[7] || !campos[8]) {
-            // Si tu función leer_linea_csv usa memoria dinámica, libera aquí
-            // free(campos);
             continue;
         }
         // Crea un nuevo producto y asigna memoria
@@ -146,15 +144,18 @@ void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *prod
     presioneTeclaParaContinuar();
 }
 
+//Función encargada de buscar un producto por su nombre
 void buscarProductoPorNombre(HashMap *productosPorNombre) {
     limpiarPantalla();
     char nombre[51];
     printf("Ingrese el nombre del producto a buscar: ");
     fgets(nombre, sizeof(nombre), stdin);
     nombre[strcspn(nombre, "\n")] = 0;
-
+    // Busca el producto en el mapa de productosPorNombre
     Pair *pair = searchMap(productosPorNombre, nombre);
     if (pair != NULL) {
+        // Si se encuentra el producto, se muestra su información
+        // Se obtiene la lista de productos con ese nombre y se itera sobre ella para mostrar los detalles
         List *listaProductos = (List *)pair->value;
         Producto *producto = (Producto *)list_first(listaProductos);
         if (!producto) {
@@ -178,6 +179,7 @@ void buscarProductoPorNombre(HashMap *productosPorNombre) {
             producto = list_next(listaProductos);
         } 
     } else {
+        // Si no se encuentra el producto, se muestra un mensaje no encontrado
         puts("Producto no encontrado.");
     }
     presioneTeclaParaContinuar();
