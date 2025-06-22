@@ -52,7 +52,7 @@ void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito);
 
 void eliminarDelCarrito(List *carrito);
 
-void confirmarCompra(List *carrito, HashMap *productosPorCodigo);
+void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorCodigo);
 
 void verCarrito(List *carrito);
 
