@@ -24,4 +24,6 @@ void enlarge(HashMap * map);
 
 void map_clean(HashMap *map);
 
+void map_reset(HashMap *map);
+
 #endif /* HashMap_h */

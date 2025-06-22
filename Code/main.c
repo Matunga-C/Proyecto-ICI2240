@@ -39,6 +39,9 @@ int main() {
                         char nombreArchivo[100];
                         fgets(nombreArchivo, sizeof(nombreArchivo), stdin);
                         nombreArchivo[strcspn(nombreArchivo, "\n")] = 0; // Eliminar el salto de línea 
+                        map_reset(productosPorCodigo);
+                        map_reset(productosPorNombre);
+                        map_reset(productosPorCategoria);
                         cargarInventario(nombreArchivo, productosPorNombre, productosPorCodigo, productosPorCategoria); 
                         break;//registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
                     case 2:

@@ -155,3 +155,21 @@ void map_clean(HashMap *map) {
     free(map->buckets);
     free(map);
 }
+
+void map_reset(HashMap *map) {
+    if (map == NULL) return;
+    for (long i = 0; i < map->capacity; i++) {
+        if (map->buckets[i] != NULL) {
+            if (map->buckets[i]->key != NULL) {
+                free(map->buckets[i]->key); // Liberar la clave
+            }
+            if (map->buckets[i]->value != NULL) {
+                free(map->buckets[i]->value); // Liberar el valor
+            }
+            free(map->buckets[i]); // Liberar el par
+            map->buckets[i] = NULL; // Reiniciar el bucket
+        }
+    }
+    map->size = 0; // Reiniciar el tamaño
+    map->current = -1; // Reiniciar el índice actual
+}
