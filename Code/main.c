@@ -43,7 +43,7 @@ int main() {
                         map_reset(productosPorNombre);
                         map_reset(productosPorCategoria);
                         cargarInventario(nombreArchivo, productosPorNombre, productosPorCodigo, productosPorCategoria); 
-                        break;//registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
+                        break;
                     case 2:
                         limpiarPantalla(); 
                         menuBusqueda();
@@ -59,7 +59,6 @@ int main() {
                         }
                         break;
                     case 3: 
-                        //listarProductosPorCategoria(productosPorCategoria); break;
                         menuModificarInventario();
                         int opcionModificar;
                         scanf("%d", &opcionModificar);
@@ -102,6 +101,5 @@ int main() {
     map_clean(productosPorCategoria);
     //freeGraph(grafoCompras);
     list_clean(carrito);
-    //hola como estas
     return 0;
 }
