@@ -216,33 +216,55 @@ void listarProductosPorCategoria(HashMap *productosPorCategoria){
     presioneTeclaParaContinuar();
 }
 
-void mostrarProductosStockBajo(HashMap *productosPorCategoria) {
+void mostrarProductosStock(HashMap *productosPorCodigo) {
     limpiarPantalla();
-    int umbral = 15;
-    int contador = 0;
-    printf("Productos con stock <= %d:\n", umbral);
-    Pair *pair = firstMap(productosPorCategoria);
-    while (pair != NULL) {
-        List *listaProductos = (List *)pair->value;
-        Producto *producto = list_first(listaProductos);
-        while (producto != NULL) {
-            if (producto->stock <= umbral) {
-                printf("\n");
-                printf("Categoría: %s\n", producto->categoria);
-                printf("Nombre: %s\n", producto->nombre);
-                printf("Marca: %s\n", producto->marca);
-                printf("Código de Barras: %s\n", producto->codigoBarras);
-                printf("Stock: %d\n", producto->stock);
-                printf("Precio Venta: %.2f\n", producto->precioVenta);
-                printf("-------------------------------------------------------------\n");
-                contador++;
-            }
-            producto = list_next(listaProductos);
-        }
-        pair = nextMap(productosPorCategoria);
+    int umbral, opcion, contador = 0;
+
+    // Solicitar al usuario el umbral
+    printf("Ingrese el umbral de stock: ");
+    scanf("%d", &umbral);
+    getchar(); // Limpiar buffer
+
+    // Solicitar al usuario si desea ver productos con stock mayor o menor al umbral
+    printf("Seleccione una opción:\n");
+    printf("1. Ver productos con stock menor o igual al umbral\n");
+    printf("2. Ver productos con stock mayor al umbral\n");
+    printf("Opción: ");
+    scanf("%d", &opcion);
+    getchar(); // Limpiar buffer
+
+    limpiarPantalla();
+    if (opcion == 1) {
+        printf("Productos con stock <= %d:\n", umbral);
+    } else if (opcion == 2) {
+        printf("Productos con stock > %d:\n", umbral);
+    } else {
+        printf("Opción no válida.\n");
+        presioneTeclaParaContinuar();
+        return;
     }
+
+    // Iterar sobre el mapa productosPorCodigo
+    Pair *pair = firstMap(productosPorCodigo);
+    while (pair != NULL) {
+        Producto *producto = (Producto *)pair->value;
+        if ((opcion == 1 && producto->stock <= umbral) || 
+            (opcion == 2 && producto->stock > umbral)) {
+            printf("\n");
+            printf("Nombre: %s\n", producto->nombre);
+            printf("Categoría: %s\n", producto->categoria);
+            printf("Marca: %s\n", producto->marca);
+            printf("Código de Barras: %s\n", producto->codigoBarras);
+            printf("Stock: %d\n", producto->stock);
+            printf("Precio Venta: %.2f\n", producto->precioVenta);
+            printf("-------------------------------------------------------------\n");
+            contador++;
+        }
+        pair = nextMap(productosPorCodigo);
+    }
+
     if (contador == 0) {
-        printf("No se encontraron productos con stock bajo.\n");
+        printf("No se encontraron productos con las condiciones especificadas.\n");
     }
     presioneTeclaParaContinuar();
 }

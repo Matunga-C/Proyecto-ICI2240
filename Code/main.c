@@ -53,7 +53,7 @@ int main() {
                         switch (opcionBusqueda) {
                             case 1: buscarProductoPorNombre(productosPorNombre); break;
                             case 2: listarProductosPorCategoria(productosPorCategoria); break;
-                            //case 3: mostrarProductosStock(productosPorCategoria); break;
+                            case 3: mostrarProductosStock(productosPorCodigo); break;
                             //case 4: mostrarVentasProductos(productosPorCodigo); break; // Esta función no está implementada
                             default: printf("Opción no válida.\n");
                         }
