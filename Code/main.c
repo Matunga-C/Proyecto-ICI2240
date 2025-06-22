@@ -12,8 +12,9 @@ int main() {
     HashMap *productosPorCodigo = createMap(2000);
     HashMap *productosPorNombre = createMap(2000);
     HashMap *productosPorCategoria = createMap(2000);
-    //Graph *grafoCompras = createGraph();
+
     List *carrito = list_create();
+    List *historialCompras = list_create();
     
     int opcion, tipoUsuario;
     while (1) {
@@ -87,7 +88,7 @@ int main() {
                     case 1: agregarAlCarrito(productosPorCodigo, carrito); break;
                     case 2: eliminarDelCarrito(carrito); break;
                     case 3: verCarrito(carrito); break;
-                    //case 4: confirmarCompra(carrito, grafoCompras); break;
+                    case 4: confirmarCompra(carrito, historialCompras, productosPorCodigo); break;
                     default: printf("Opción no válida.\n");
                 }
             }

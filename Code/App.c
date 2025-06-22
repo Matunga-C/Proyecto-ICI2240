@@ -465,11 +465,12 @@ void guardarInventario(HashMap* productosPorCodigo) {
         return;
     }
     // Escribir encabezado
-    fprintf(archivo, "Nombre,Marca,Categoria,CodigoBarras,Stock,PrecioVenta,PrecioMercado,PrecioCosto,Vendidos\n");
+    fprintf(archivo, "ID, Nombre,Marca,Categoria,CodigoBarras,Stock,PrecioVenta,PrecioMercado,PrecioCosto,Vendidos\n");
     Pair* pair = firstMap(productosPorCodigo);
+    size_t idx = 0;
     while (pair != NULL) {
         Producto* producto = (Producto*)pair->value;
-        fprintf(archivo, "%s,%s,%s,%s,%d,%.2f,%.2f,%.2f,%d\n",
+        fprintf(archivo, "%zu,%s,%s,%s,%s,%d,%.2f,%.2f,%.2f,%d\n",idx++,
             producto->nombre,
             producto->marca,
             producto->categoria,
@@ -481,6 +482,7 @@ void guardarInventario(HashMap* productosPorCodigo) {
             producto->vendidos
         );
         pair = nextMap(productosPorCodigo);
+        idx++;
     }
     fclose(archivo);
     printf("Inventario guardado en '%s'.\n", nombreArchivo);
@@ -580,4 +582,43 @@ void verCarrito(List *carrito) {
     }
     printf("Total: %.2f\n", total);
     presioneTeclaParaContinuar();
+}
+
+void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPorCodigo){
+    limpiarPantalla();
+
+    if(list_first(carrito) == NULL){
+        printf("El carrito está vacío. No se puede confirmar la compra.\n");
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    List* compraHecha = list_create();
+
+    Producto* producto = list_first(carrito);
+    while (producto != NULL) {
+        // Busca el producto en el inventario
+        Pair* pair = searchMap(productosPorCodigo, producto->codigoBarras);
+        if (pair != NULL) {
+            Producto* prodInventario = (Producto*)pair->value;
+            // Aumenta el contador de vendidos
+            prodInventario->vendidos += producto->stock;
+            // Agrega el producto al historial de compras
+            list_pushBack(compraHecha, prodInventario);
+        }
+        
+        producto = list_next(carrito);
+    }    
+
+    // Agrega la compra hecha al historial de compras
+    list_pushBack(historialCompras, compraHecha);
+
+    // Limpia el carrito
+    while (list_first(carrito) != NULL) {
+        Producto* prod = list_popCurrent(carrito);
+        free(prod); // Libera la memoria del producto
+    }
+    printf("Compra confirmada exitosamente.\n");
+
+    // Agregar mostrar los productos comprados y el total de la compra
 }
