@@ -40,7 +40,7 @@ void eliminarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategori
 
 void guardarInventario(HashMap *productosPorCodigo);
 
-void cargarInventario(HashMap *productosPorNombre, HashMap *productosPorCodigo, HashMap *productosPorCategoria);
+void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *productosPorCodigo, HashMap *productosPorCategoria);
 
 void listarProductosPorCategoria(HashMap *productosPorCategoria);
 

@@ -59,9 +59,9 @@ void menuModificarInventario() {
     printf("Seleccione una opción: ");
 }
 
-void cargarInventario(HashMap *productosPorNombre, HashMap *productosPorCodigo , HashMap *productosPorCategoria) {
+void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *productosPorCodigo , HashMap *productosPorCategoria) {
     limpiarPantalla();
-    FILE *file = fopen("productos_supermercado_500_limpio.csv", "r");
+    FILE *file = fopen(nameFile, "r");
     if (file == NULL) {
         perror("Error al abrir el archivo");
         presioneTeclaParaContinuar();

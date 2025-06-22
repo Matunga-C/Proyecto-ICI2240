@@ -34,7 +34,13 @@ int main() {
                 if (opcion == 0) break;
 
                 switch (opcion) {
-                    case 1: cargarInventario(productosPorNombre, productosPorCodigo ,productosPorCategoria); break;//registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
+                    case 1:
+                        printf("Ingrese el nombre del archivo CSV para cargar el inventario: ");
+                        char nombreArchivo[100];
+                        fgets(nombreArchivo, sizeof(nombreArchivo), stdin);
+                        nombreArchivo[strcspn(nombreArchivo, "\n")] = 0; // Eliminar el salto de línea 
+                        cargarInventario(nombreArchivo, productosPorNombre, productosPorCodigo, productosPorCategoria); 
+                        break;//registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
                     case 2:
                         limpiarPantalla(); 
                         menuBusqueda();
