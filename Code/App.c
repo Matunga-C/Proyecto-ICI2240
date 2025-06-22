@@ -269,6 +269,60 @@ void mostrarProductosStock(HashMap *productosPorCodigo) {
     presioneTeclaParaContinuar();
 }
 
+void mostrarVentasProductos(HashMap *productosPorCodigo) {
+    limpiarPantalla();
+    int umbral, opcion, contador = 0;
+
+    // Solicitar al usuario el umbral
+    printf("Ingrese el umbral de ventas: ");
+    scanf("%d", &umbral);
+    getchar(); // Limpiar buffer
+
+    // Solicitar al usuario si desea ver productos con ventas mayores o menores al umbral
+    printf("Seleccione una opción:\n");
+    printf("1. Ver productos con ventas menores o iguales al umbral\n");
+    printf("2. Ver productos con ventas mayores o iguales al umbral\n");
+    printf("Opción: ");
+    scanf("%d", &opcion);
+    getchar(); // Limpiar buffer
+
+    limpiarPantalla();
+    if (opcion == 1) {
+        printf("Productos con ventas <= %d:\n", umbral);
+    } else if (opcion == 2) {
+        printf("Productos con ventas >= %d:\n", umbral);
+    } else {
+        printf("Opción no válida.\n");
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    // Iterar sobre el mapa productosPorCodigo
+    Pair *pair = firstMap(productosPorCodigo);
+    while (pair != NULL) {
+        Producto *producto = (Producto *)pair->value;
+        if ((opcion == 1 && producto->vendidos <= umbral) || 
+            (opcion == 2 && producto->vendidos >= umbral)) {
+            printf("\n");
+            printf("Nombre: %s\n", producto->nombre);
+            printf("Categoría: %s\n", producto->categoria);
+            printf("Marca: %s\n", producto->marca);
+            printf("Código de Barras: %s\n", producto->codigoBarras);
+            printf("Stock: %d\n", producto->stock);
+            printf("Precio Venta: %.2f\n", producto->precioVenta);
+            printf("Vendidos: %d\n", producto->vendidos);
+            printf("-------------------------------------------------------------\n");
+            contador++;
+        }
+        pair = nextMap(productosPorCodigo);
+    }
+
+    if (contador == 0) {
+        printf("No se encontraron productos con las condiciones especificadas.\n");
+    }
+    presioneTeclaParaContinuar();
+}
+
 void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre) {
     limpiarPantalla();
     Producto *producto = malloc(sizeof(Producto));
