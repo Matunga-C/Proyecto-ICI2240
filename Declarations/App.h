@@ -56,4 +56,6 @@ void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPo
 
 void verCarrito(List *carrito);
 
+void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria);
+
 #endif

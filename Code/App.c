@@ -630,3 +630,4 @@ void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPor
 
     // Agregar mostrar los productos comprados y el total de la compra
 }
+

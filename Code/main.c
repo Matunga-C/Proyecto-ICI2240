@@ -72,7 +72,7 @@ int main() {
                         }
                         break;
                     case 4: guardarInventario(productosPorCodigo); break;
-                    //case 5: generarReporte(productosPorCodigo); break;
+                    case 5: generarReporte(productosPorCodigo, productosPorCategoria, historialCompras); break;
                     default: printf("Opción no válida.\n");
                 }
             }
@@ -103,4 +103,4 @@ int main() {
     //freeGraph(grafoCompras);
     list_clean(carrito);
     return 0;
-}
+} 

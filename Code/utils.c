@@ -95,3 +95,25 @@ List *split_string(const char *str, const char *delim) {
 
   return result;
 }
+
+void insertarFrecuenciaGrafo(HashMap* graph, char* nameA, char* nameB){
+    
+    Pair* parA = searchMap(graph, nameA);
+    if(!parA){
+        HashMap* relations = createMap(2000);
+        insertMap(graph, nameA, relations);
+        parA = searchMap(graph, nameA);
+    }
+
+    HashMap* relationsA = (HashMap*)parA->value;
+    Pair* parB = searchMap(relationsA, nameB);
+    if(parB){
+       int* frecuency = (int*)parB->value;
+       (*frecuency)++;
+    }
+    else{
+        int* newFrecuency = malloc(sizeof(int));
+        *newFrecuency = 1;
+        insertMap(relationsA, nameB, newFrecuency);
+    }
+}
