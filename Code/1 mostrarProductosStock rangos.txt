@@ -33,6 +33,7 @@ void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPor
     Producto* producto = list_first(carrito);
     while (producto != NULL) {
         // Busca el producto en el inventario
+        hola
         Pair* pair = searchMap(productosPorCodigo, producto->codigoBarras);
         if (pair != NULL) { 
             Producto* prodInventario = (Producto*)pair->value;
