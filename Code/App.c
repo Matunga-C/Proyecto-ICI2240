@@ -15,27 +15,47 @@ void presioneTeclaParaContinuar() {
 }
 
 void mostrarMenuAdministrador() {
+    limpiarPantalla();
     printf("\n=== Menú Administrador ===\n");
-    printf("1. Registrar nuevo producto\n");
-    printf("2. Buscar producto por nombre\n");
-    printf("3. Listar productos por categoría\n");
-    printf("4. Modificar stock de producto\n");
-    printf("5. Mostrar productos con stock bajo\n");
-    printf("6. Eliminar producto\n");
-    printf("7. Guardar inventario\n");
-    printf("8. Cargar inventario\n");
-    printf("9. Generar reporte completo\n");
+    printf("1. Cargar inventario\n");
+    printf("2. Métodos de búsqueda\n");
+    printf("3. Modificar inventario\n");
+    printf("4. Guardar inventario\n");
+    printf("5. Generar reporte completo\n");
     printf("0. Salir\n");
     printf("Seleccione una opción: ");
 }
 
+
 void mostrarMenuCliente() {
+    limpiarPantalla();
     printf("\n=== Menú Cliente ===\n");
     printf("1. Agregar al Carrito\n");
     printf("2. Eliminar del Carrito\n");
     printf("3. Ver Carrito (Productos)\n");
     printf("4. Confirmar Compra\n");
-    printf("5. Salir\n");
+    printf("0. Salir\n");
+    printf("Seleccione una opción: ");
+}
+
+void menuBusqueda() {
+    limpiarPantalla();
+    printf("\n=== Menú de Búsqueda ===\n");
+    printf("1. Buscar producto por nombre\n");
+    printf("2. Buscar productos por categoría\n");
+    printf("3. Mostrar stock de productos\n");
+    printf("4. Mostrar ventas de productos\n");
+    printf("0. Salir\n");
+    printf("Seleccione una opción: ");
+}
+
+void menuModificarInventario() {
+    limpiarPantalla();
+    printf("\n=== Menú de Modificación de Inventario ===\n");
+    printf("1. Registrar producto\n");
+    printf("2. Modificar stock de producto\n");
+    printf("3. Eliminar producto\n");
+    printf("0. Salir\n");
     printf("Seleccione una opción: ");
 }
 
@@ -44,6 +64,7 @@ void cargarInventario(HashMap *productosPorNombre, HashMap *productosPorCodigo ,
     FILE *file = fopen("productos_supermercado_500_limpio.csv", "r");
     if (file == NULL) {
         perror("Error al abrir el archivo");
+        presioneTeclaParaContinuar();
         return;
     }
     char **campos;
@@ -116,6 +137,7 @@ void cargarInventario(HashMap *productosPorNombre, HashMap *productosPorCodigo ,
     }
     puts("Inventario cargado exitosamente.");
     fclose(file);
+    presioneTeclaParaContinuar();
 }
 
 void buscarProductoPorNombre(HashMap *productosPorNombre) {
@@ -131,6 +153,7 @@ void buscarProductoPorNombre(HashMap *productosPorNombre) {
         Producto *producto = (Producto *)list_first(listaProductos);
         if (!producto) {
             puts("No se encontraron productos con ese nombre.");
+            presioneTeclaParaContinuar();
             return;
         }
         while (producto != NULL) {
@@ -151,6 +174,7 @@ void buscarProductoPorNombre(HashMap *productosPorNombre) {
     } else {
         puts("Producto no encontrado.");
     }
+    presioneTeclaParaContinuar();
 }
 
 void listarProductosPorCategoria(HashMap *productosPorCategoria){
@@ -163,6 +187,7 @@ void listarProductosPorCategoria(HashMap *productosPorCategoria){
     Pair *pair = searchMap(productosPorCategoria, categoria);
     if (pair == NULL) {
         printf("No se encontraron productos en la categoría '%s'.\n", categoria);
+        presioneTeclaParaContinuar();
         return;
     }
 
@@ -170,6 +195,7 @@ void listarProductosPorCategoria(HashMap *productosPorCategoria){
     Producto *producto = list_first(listaProductos);
     if (!producto) {
         printf("No se encontraron productos en la categoría '%s'.\n", categoria);
+        presioneTeclaParaContinuar();
         return;
     }
     printf("\nProductos en la categoría '%s':\n", categoria);
@@ -187,12 +213,13 @@ void listarProductosPorCategoria(HashMap *productosPorCategoria){
 
         producto = list_next(listaProductos);
     }
+    presioneTeclaParaContinuar();
 }
 
 void mostrarProductosStockBajo(HashMap *productosPorCategoria) {
     limpiarPantalla();
     int umbral = 15;
-
+    int contador = 0;
     printf("Productos con stock <= %d:\n", umbral);
     Pair *pair = firstMap(productosPorCategoria);
     while (pair != NULL) {
@@ -208,11 +235,16 @@ void mostrarProductosStockBajo(HashMap *productosPorCategoria) {
                 printf("Stock: %d\n", producto->stock);
                 printf("Precio Venta: %.2f\n", producto->precioVenta);
                 printf("-------------------------------------------------------------\n");
+                contador++;
             }
             producto = list_next(listaProductos);
         }
         pair = nextMap(productosPorCategoria);
     }
+    if (contador == 0) {
+        printf("No se encontraron productos con stock bajo.\n");
+    }
+    presioneTeclaParaContinuar();
 }
 
 void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre) {
@@ -236,6 +268,7 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
 
     if (searchMap(productosPorCodigo, producto->codigoBarras) != NULL) {
         puts("El código de barras ya existe. No se puede registrar el producto.");
+        presioneTeclaParaContinuar();
         free(producto);
         return;
     }
@@ -277,6 +310,7 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
         list_pushBack(listaProductosCategoria, producto);
     }
     puts("Producto registrado exitosamente.");
+    presioneTeclaParaContinuar();
 }
 
 void modificarStock(HashMap* productosPorCodigo) {
@@ -289,6 +323,7 @@ void modificarStock(HashMap* productosPorCodigo) {
     Pair* pair = searchMap(productosPorCodigo, codBarra);
     if (pair == NULL) {
         printf("Producto no encontrado.\n");
+        presioneTeclaParaContinuar();
         return;
     }
     Producto* producto = (Producto*)pair->value;
@@ -299,6 +334,7 @@ void modificarStock(HashMap* productosPorCodigo) {
     getchar(); // Limpiar buffer
     producto->stock = nuevoStock;
     printf("Stock actualizado correctamente.\n");
+    presioneTeclaParaContinuar();
 }
 
 void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategoria) {
@@ -311,6 +347,7 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
     Pair* pair = searchMap(productosPorCodigo, codBarra);
     if (pair == NULL) {
         printf("Producto no encontrado.\n");
+        presioneTeclaParaContinuar();
         return;
     }
     Producto* producto = (Producto*)pair->value;
@@ -339,6 +376,7 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
     eraseMap(productosPorCodigo, codBarra);
 
     printf("Producto eliminado correctamente.\n");
+    presioneTeclaParaContinuar();
 }
 
 void guardarInventario(HashMap* productosPorCodigo) {
@@ -347,6 +385,7 @@ void guardarInventario(HashMap* productosPorCodigo) {
     FILE* archivo = fopen(nombreArchivo, "w");
     if (!archivo) {
         printf("No se pudo abrir el archivo para guardar.\n");
+        presioneTeclaParaContinuar();
         return;
     }
     // Escribir encabezado
@@ -369,4 +408,100 @@ void guardarInventario(HashMap* productosPorCodigo) {
     }
     fclose(archivo);
     printf("Inventario guardado en '%s'.\n", nombreArchivo);
+    presioneTeclaParaContinuar();
+}
+
+void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito) {
+    limpiarPantalla();
+    char codigo[51];
+    printf("Ingrese el código de barras del producto a agregar: ");
+    fgets(codigo, sizeof(codigo), stdin);
+    codigo[strcspn(codigo, "\n")] = 0;
+
+    Pair *pair = searchMap(productosPorCodigo, codigo);
+    if (!pair) {
+        printf("Producto no encontrado.\n");
+        presioneTeclaParaContinuar();
+        return;
+    }
+    Producto *producto = (Producto *)pair->value;
+    if (producto->stock <= 0) {
+        printf("No hay stock disponible para este producto.\n");
+        return;
+    }
+    int cantidad;
+    printf("Ingrese la cantidad a agregar: ");
+    scanf("%d", &cantidad);
+    getchar(); // Limpiar buffer
+
+    if (cantidad <= 0 || cantidad > producto->stock) {
+        printf("Cantidad inválida o insuficiente stock.\n");
+        return;
+    }
+
+    // Crear una copia del producto para el carrito (solo con los datos necesarios)
+    Producto *productoCarrito = malloc(sizeof(Producto));
+    *productoCarrito = *producto;
+    productoCarrito->stock = cantidad;
+    list_pushBack(carrito, productoCarrito);
+
+    producto->stock -= cantidad;
+    printf("Producto agregado al carrito.\n");
+    presioneTeclaParaContinuar();
+}
+
+void eliminarDelCarrito(List *carrito) {
+    limpiarPantalla();
+    if (list_first(carrito) == NULL) {
+        printf("El carrito está vacío.\n");
+        presioneTeclaParaContinuar();
+        return;
+    }
+    int idx = 0, pos, total = 0;
+    Producto *prod = list_first(carrito);
+    printf("Productos en el carrito:\n");
+    while (prod) {
+        printf("%d. %s | Marca: %s | Cantidad: %d\n", idx + 1, prod->nombre, prod->marca, prod->stock);
+        prod = list_next(carrito);
+        idx++;
+    }
+    total = idx;
+    printf("Ingrese el número del producto a eliminar: ");
+    scanf("%d", &pos);
+    getchar(); // Limpiar buffer
+
+    if (pos < 1 || pos > total) {
+        printf("Opción inválida.\n");
+        presioneTeclaParaContinuar();
+        return;
+    }
+    // Volver al inicio y avanzar hasta la posición
+    list_first(carrito);
+    for (int i = 1; i < pos; i++) list_next(carrito);
+    Producto *eliminado = list_popCurrent(carrito);
+    free(eliminado);
+    printf("Producto eliminado del carrito.\n");
+    presioneTeclaParaContinuar();
+}
+
+void verCarrito(List *carrito) {
+    limpiarPantalla();
+    Producto *prod = list_first(carrito);
+    if (!prod) {
+        printf("El carrito está vacío.\n");
+        presioneTeclaParaContinuar();
+        return;
+    }
+    printf("Productos en el carrito:\n");
+    int idx = 1;
+    float total = 0;
+    while (prod) {
+        printf("%d. %s | Marca: %s | Cantidad: %d | Precio unitario: %.2f | Subtotal: %.2f\n",
+            idx, prod->nombre, prod->marca, prod->stock, prod->precioVenta, prod->precioVenta * prod->stock);
+        total += prod->precioVenta * prod->stock;
+        prod = list_next(carrito);
+        idx++;
+    }
+    printf("Total: %.2f\n", total);
+    presioneTeclaParaContinuar();
 }

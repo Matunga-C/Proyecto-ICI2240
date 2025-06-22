@@ -34,35 +34,56 @@ int main() {
                 if (opcion == 0) break;
 
                 switch (opcion) {
-                    case 1: registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
-                    case 2: buscarProductoPorNombre(productosPorNombre); break;
-                    case 3: listarProductosPorCategoria(productosPorCategoria); break;
-                    case 4: modificarStock(productosPorCodigo); break;
-                    case 5: mostrarProductosStockBajo(productosPorCategoria); break;
-                    case 6: eliminarProducto(productosPorCodigo, productosPorCategoria); break;
-                    case 7: guardarInventario(productosPorCodigo); break;
-                    case 8: cargarInventario(productosPorNombre, productosPorCodigo ,productosPorCategoria); break;
-                    //case 9: generarReporte(productosPorCodigo); break;
+                    case 1: cargarInventario(productosPorNombre, productosPorCodigo ,productosPorCategoria); break;//registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
+                    case 2:
+                        limpiarPantalla(); 
+                        menuBusqueda();
+                        int opcionBusqueda;
+                        scanf("%d", &opcionBusqueda);
+                        getchar(); // Limpiar buffer
+                        switch (opcionBusqueda) {
+                            case 1: buscarProductoPorNombre(productosPorNombre); break;
+                            case 2: listarProductosPorCategoria(productosPorCategoria); break;
+                            //case 3: mostrarProductosStock(productosPorCategoria); break;
+                            //case 4: mostrarVentasProductos(productosPorCodigo); break; // Esta función no está implementada
+                            default: printf("Opción no válida.\n");
+                        }
+                        break;
+                    case 3: 
+                        //listarProductosPorCategoria(productosPorCategoria); break;
+                        menuModificarInventario();
+                        int opcionModificar;
+                        scanf("%d", &opcionModificar);
+                        getchar(); // Limpiar buffer
+                        switch (opcionModificar) {
+                            case 1: registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
+                            case 2: modificarStock(productosPorCodigo); break;
+                            case 3: eliminarProducto(productosPorCodigo, productosPorCategoria); break;
+                            default: printf("Opción no válida.\n");
+                        }
+                        break;
+                    case 4: guardarInventario(productosPorCodigo); break;
+                    //case 5: generarReporte(productosPorCodigo); break;
                     default: printf("Opción no válida.\n");
                 }
             }
-        }/* else if (tipoUsuario == 2) {
+        } else if (tipoUsuario == 2) {
             while (1) {
                 mostrarMenuCliente();
                 scanf("%d", &opcion);
                 getchar(); // Limpiar buffer
 
-                if (opcion == 5) break;
+                if (opcion == 0) break;
 
                 switch (opcion) {
                     case 1: agregarAlCarrito(productosPorCodigo, carrito); break;
                     case 2: eliminarDelCarrito(carrito); break;
                     case 3: verCarrito(carrito); break;
-                    case 4: confirmarCompra(carrito, grafoCompras); break;
+                    //case 4: confirmarCompra(carrito, grafoCompras); break;
                     default: printf("Opción no válida.\n");
                 }
             }
-        } */else {
+        } else {
             printf("Tipo de usuario no válido.\n");
         }
     }
