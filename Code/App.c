@@ -228,7 +228,7 @@ void mostrarProductosStock(HashMap *productosPorCodigo) {
     // Solicitar al usuario si desea ver productos con stock mayor o menor al umbral
     printf("Seleccione una opción:\n");
     printf("1. Ver productos con stock menor o igual al umbral\n");
-    printf("2. Ver productos con stock mayor al umbral\n");
+    printf("2. Ver productos con stock mayor o igual al umbral\n");
     printf("Opción: ");
     scanf("%d", &opcion);
     getchar(); // Limpiar buffer
@@ -237,7 +237,7 @@ void mostrarProductosStock(HashMap *productosPorCodigo) {
     if (opcion == 1) {
         printf("Productos con stock <= %d:\n", umbral);
     } else if (opcion == 2) {
-        printf("Productos con stock > %d:\n", umbral);
+        printf("Productos con stock >= %d:\n", umbral);
     } else {
         printf("Opción no válida.\n");
         presioneTeclaParaContinuar();
@@ -249,7 +249,7 @@ void mostrarProductosStock(HashMap *productosPorCodigo) {
     while (pair != NULL) {
         Producto *producto = (Producto *)pair->value;
         if ((opcion == 1 && producto->stock <= umbral) || 
-            (opcion == 2 && producto->stock > umbral)) {
+            (opcion == 2 && producto->stock >= umbral)) {
             printf("\n");
             printf("Nombre: %s\n", producto->nombre);
             printf("Categoría: %s\n", producto->categoria);
