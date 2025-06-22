@@ -32,7 +32,7 @@ int main() {
                 scanf("%d", &opcion);
                 getchar(); // Limpiar buffer
 
-                if (opcion == 0) break;
+                if (opcion == 0) break; //comentario de prueba
 
                 switch (opcion) {
                     case 1:
