@@ -14,6 +14,8 @@ void presioneTeclaParaContinuar() {
     getchar(); // Espera a que el usuario presione una tecla
 }
 
+
+//Función que muestra el menú del administrador
 void mostrarMenuAdministrador() {
     limpiarPantalla();
     printf("\n=== Menú Administrador ===\n");
@@ -26,7 +28,7 @@ void mostrarMenuAdministrador() {
     printf("Seleccione una opción: ");
 }
 
-
+//Función que muestra el menú del cliente
 void mostrarMenuCliente() {
     limpiarPantalla();
     printf("\n=== Menú Cliente ===\n");
@@ -38,6 +40,7 @@ void mostrarMenuCliente() {
     printf("Seleccione una opción: ");
 }
 
+//Función que muestra el menú de búsqueda
 void menuBusqueda() {
     limpiarPantalla();
     printf("\n=== Menú de Búsqueda ===\n");
@@ -49,6 +52,7 @@ void menuBusqueda() {
     printf("Seleccione una opción: ");
 }
 
+//Función que muestra el menú de modificación del inventario
 void menuModificarInventario() {
     limpiarPantalla();
     printf("\n=== Menú de Modificación de Inventario ===\n");
@@ -59,8 +63,10 @@ void menuModificarInventario() {
     printf("Seleccione una opción: ");
 }
 
+//Función que carga el csv que contiene el inventario de productos
 void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *productosPorCodigo , HashMap *productosPorCategoria) {
     limpiarPantalla();
+    //Se abre el archivo CSV
     FILE *file = fopen(nameFile, "r");
     if (file == NULL) {
         perror("Error al abrir el archivo");
@@ -70,7 +76,7 @@ void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *prod
     char **campos;
     // Leer encabezado
     campos = leer_linea_csv(file, ',');
-
+    //Lee cada linea del archivo CSV
     while ((campos = leer_linea_csv(file, ',')) != NULL) {
         // Verifica que existan todos los campos necesarios
         if (!campos[1] || !campos[2] || !campos[3] || !campos[4] ||
@@ -79,38 +85,40 @@ void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *prod
             // free(campos);
             continue;
         }
-
+        // Crea un nuevo producto y asigna memoria
         Producto *producto = malloc(sizeof(Producto));
         if (!producto) {
             perror("No se pudo asignar memoria para producto");
             // free(campos);
             continue;
         }
-
+        //Asigna el nombre del producto
         strncpy(producto->nombre, campos[1], sizeof(producto->nombre) - 1);
         producto->nombre[sizeof(producto->nombre) - 1] = '\0';
-
+        //Asigna la marca del producto
         strncpy(producto->marca, campos[2], sizeof(producto->marca) - 1);
         producto->marca[sizeof(producto->marca) - 1] = '\0';
-
+        //Asigna la categoría del producto
         strncpy(producto->categoria, campos[3], sizeof(producto->categoria) - 1);
         producto->categoria[sizeof(producto->categoria) - 1] = '\0';
-
+        //Asigna el código de barras del producto
         strncpy(producto->codigoBarras, campos[8], sizeof(producto->codigoBarras) - 1);
         producto->codigoBarras[sizeof(producto->codigoBarras) - 1] = '\0';
-
+        //Asigna el stock del producto
         producto->stock = atoi(campos[7]);
+        //Asigna los precios del producto
         producto->precioVenta = atof(campos[4]);
         producto->precioMercado = atof(campos[5]);
         producto->precioCosto = atof(campos[6]);
+        //Inicializa los vendidos a 0
         producto->vendidos = 0;
 
-        // Insertar en productosPorCodigo
+        // Insertar en el mapa de productosPorCodigo
         if (searchMap(productosPorCodigo, producto->codigoBarras) == NULL) {
             insertMap(productosPorCodigo, producto->codigoBarras, producto);
         }
 
-        // Insertar en productosPorNombre
+        // Insertar en el mapa de productosPorNombre
         Pair *pairNombre = searchMap(productosPorNombre, producto->nombre);
         if (pairNombre == NULL) {
             List *listaProductos = list_create();
@@ -131,10 +139,8 @@ void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *prod
             List *listaProductosCategoria = (List *)pairCategoria->value;
             list_pushBack(listaProductosCategoria, producto);
         }
-
-        // Si tu función leer_linea_csv usa memoria dinámica, libera aquí
-        // free(campos);
     }
+    //Se muestra un mensaje de éxito al cargar el inventario y se cierra el archivo
     puts("Inventario cargado exitosamente.");
     fclose(file);
     presioneTeclaParaContinuar();
