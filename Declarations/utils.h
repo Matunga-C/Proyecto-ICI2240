@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "list.h"
+#include "Map.h"
 
 char **leer_linea_csv(FILE *archivo, char separador);
 
@@ -15,4 +16,5 @@ void limpiarPantalla();
 
 void presioneTeclaParaContinuar();
 
+void insertarFrecuencia(HashMap *graph, char *nameA, char *nameB);
 #endif /* UTILS_H */

@@ -497,6 +497,100 @@ void guardarInventario(HashMap* productosPorCodigo) {
     presioneTeclaParaContinuar();
 }
 
+void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria, List* historialCompras) {
+    limpiarPantalla();
+    printf("=== Reporte con sugerencias automáticas ===\n\n");
+
+    HashMap* graph = createMap(2000);
+    List* compra = list_first(historialCompras);
+
+    // Paso 1: construir el grafo a partir de historial
+    while (compra != NULL) {
+        Producto* prodA = list_first(compra);
+        while (prodA != NULL) {
+            Producto* prodB = list_next(compra);
+            while (prodB != NULL) {
+                if (strcmp(prodA->codigoBarras, prodB->codigoBarras) != 0) {
+                    insertarFrecuenciaGrafo(graph, prodA, prodB);
+                    insertarFrecuenciaGrafo(graph, prodB, prodA);
+                }
+                prodB = list_next(compra);
+            }
+            prodA = list_next(compra);
+        }
+        compra = list_next(historialCompras);
+    }
+
+    // Paso 2: mostrar combos frecuentes
+    printf("=== Combos frecuentes detectados ===\n");
+    Pair *parNodo = firstMap(graph);
+    while (parNodo != NULL) {
+        char *nombreA = parNodo->key;
+        HashMap *adyacentes = (HashMap *)parNodo->value;
+
+        // Aquí podrías buscar productoA si lo necesitas para calcular % co-ocurrencia
+
+        Pair *parAdy = firstMap(adyacentes);
+        while (parAdy != NULL) {
+            char *nombreB = parAdy->key;
+            int frecuencia = *((int *)parAdy->value);
+
+            printf("- %s + %s → Comprados juntos %d veces\n", nombreA, nombreB, frecuencia);
+
+            parAdy = nextMap(adyacentes);
+        }
+
+        parNodo = nextMap(graph);
+    }
+
+    // Paso 3: sugerencias adicionales por ventas bajas
+    printf("\n=== Sugerencias por ventas bajas ===\n");
+    sugerirPromociones(productosPorCodigo, productosPorCategoria);
+
+    presioneTeclaParaContinuar();
+}
+
+
+void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria) {
+    limpiarPantalla();
+    printf("=== Productos con pocas ventas: Sugerencias de promoción ===\n");
+
+    const int umbral_ventas_bajas = 3; // Puedes ajustar este valor
+
+    Pair *par = firstMap(productosPorCodigo);
+    while (par != NULL) {
+        Producto *producto = (Producto *)par->value;
+
+        if (producto->vendidos <= umbral_ventas_bajas) {
+            printf("\nProducto con bajas ventas detectado:\n");
+            printf("Nombre: %s | Marca: %s | Vendidos: %d | Stock actual: %d\n",
+                   producto->nombre, producto->marca, producto->vendidos, producto->stock);
+
+            // Buscar candidatos en la misma categoría
+            Pair *parCat = searchMap(productosPorCategoria, producto->categoria);
+            if (parCat != NULL) {
+                List *lista = (List *)parCat->value;
+                Producto *candidato = list_first(lista);
+                while (candidato != NULL) {
+                    if (candidato != producto && candidato->vendidos > 10) {
+                        printf("→ Sugerencia: crear combo con '%s' (vendidos: %d)\n",
+                               candidato->nombre, candidato->vendidos);
+                        break;
+                    }
+                    candidato = list_next(lista);
+                }
+            }
+
+            printf("→ Acción sugerida: aplicar descuento o visibilidad en la tienda.\n");
+            printf("-----------------------------------------------------------\n");
+        }
+
+        par = nextMap(productosPorCodigo);
+    }
+
+    presioneTeclaParaContinuar();
+}
+
 void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito) {
     limpiarPantalla();
     char codigo[51];

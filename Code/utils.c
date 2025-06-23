@@ -96,7 +96,7 @@ List *split_string(const char *str, const char *delim) {
   return result;
 }
 
-void insertarFrecuenciaGrafo(HashMap* graph, char* nameA, char* nameB){
+void insertarFrecuencia(HashMap *graph, char *nameA, char *nameB){
     
     Pair* parA = searchMap(graph, nameA);
     if(!parA){

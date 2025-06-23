@@ -54,6 +54,10 @@ void eliminarDelCarrito(List *carrito);
 
 void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorCodigo);
 
+void insertarFrecuenciaGrafo(HashMap* graph, Producto* prodA, Producto* prodB);
+
+void generarReporte(HashMap *productosPorCodigo, HashMap *productosPorCategoria, List *historialCompras);
+
 void verCarrito(List *carrito);
 
 void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria);
