@@ -9,6 +9,7 @@
 
 
 int main() {
+    static long double balance;
     HashMap *productosPorCodigo = createMap(2000);
     HashMap *productosPorNombre = createMap(2000);
     HashMap *productosPorCategoria = createMap(2000);
@@ -52,8 +53,8 @@ int main() {
                         scanf("%d", &opcionBusqueda);
                         getchar(); // Limpiar buffer
                         switch (opcionBusqueda) {
-                            case 1: buscarProductoPorNombre(productosPorNombre); break;
-                            case 2: listarProductosPorCategoria(productosPorCategoria); break;
+                            case 1: buscarPorNombre(productosPorNombre); break;
+                            case 2: buscarPorCategoria(productosPorCategoria); break;
                             case 3: mostrarProductosStock(productosPorCodigo); break;
                             case 4: mostrarVentasProductos(productosPorCodigo); break; 
                             default: printf("Opción no válida.\n");

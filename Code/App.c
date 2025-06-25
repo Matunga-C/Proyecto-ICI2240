@@ -90,24 +90,41 @@ void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *prod
             // free(campos);
             continue;
         }
+
         //Asigna el nombre del producto
+        // Normalizar el nombre
+        trimWhitespace(campos[1]);
+        toLowerCase(campos[1]);
+
         strncpy(producto->nombre, campos[1], sizeof(producto->nombre) - 1);
         producto->nombre[sizeof(producto->nombre) - 1] = '\0';
+        
         //Asigna la marca del producto
+        trimWhitespace(campos[2]);
+        toLowerCase(campos[2]);
         strncpy(producto->marca, campos[2], sizeof(producto->marca) - 1);
         producto->marca[sizeof(producto->marca) - 1] = '\0';
+        
         //Asigna la categoría del producto
+        // Normalizar la categoría
+        trimWhitespace(campos[3]);
+        toLowerCase(campos[3]);
+
         strncpy(producto->categoria, campos[3], sizeof(producto->categoria) - 1);
         producto->categoria[sizeof(producto->categoria) - 1] = '\0';
+        
         //Asigna el código de barras del producto
         strncpy(producto->codigoBarras, campos[8], sizeof(producto->codigoBarras) - 1);
         producto->codigoBarras[sizeof(producto->codigoBarras) - 1] = '\0';
+        
         //Asigna el stock del producto
         producto->stock = atoi(campos[7]);
+        
         //Asigna los precios del producto
         producto->precioVenta = atof(campos[4]);
         producto->precioMercado = atof(campos[5]);
         producto->precioCosto = atof(campos[6]);
+        
         //Inicializa los vendidos a 0
         producto->vendidos = 0;
 
@@ -145,7 +162,7 @@ void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *prod
 }
 
 //Función encargada de buscar un producto por su nombre
-void buscarProductoPorNombre(HashMap *productosPorNombre) {
+void buscarPorNombre(HashMap *productosPorNombre) {
     limpiarPantalla();
     char nombre[51];
     printf("Ingrese el nombre del producto a buscar: ");
@@ -185,8 +202,18 @@ void buscarProductoPorNombre(HashMap *productosPorNombre) {
     presioneTeclaParaContinuar();
 }
 
-void listarProductosPorCategoria(HashMap *productosPorCategoria){
+void buscarPorCategoria(HashMap *productosPorCategoria){
     limpiarPantalla();
+
+    Pair* temp = firstMap(productosPorCategoria);
+
+    printf("Categorías disponibles:\n");
+
+    while(temp != NULL){
+        printf("- %s\n", (char*)temp->key);
+        temp = nextMap(productosPorCategoria);
+    }
+
     char categoria[51];
     printf("Ingrese la categoría de productos a listar: ");
     fgets(categoria, sizeof(categoria), stdin);
@@ -511,8 +538,8 @@ void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria,
             Producto* prodB = list_next(compra);
             while (prodB != NULL) {
                 if (strcmp(prodA->codigoBarras, prodB->codigoBarras) != 0) {
-                    insertarFrecuenciaGrafo(graph, prodA, prodB);
-                    insertarFrecuenciaGrafo(graph, prodB, prodA);
+                    insertarFrecuencia(graph, prodA->nombre, prodB->nombre);
+                    insertarFrecuencia(graph, prodB->nombre, prodA->nombre);
                 }
                 prodB = list_next(compra);
             }
@@ -557,8 +584,10 @@ void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCatego
 
     const int umbral_ventas_bajas = 3; // Puedes ajustar este valor
 
+    int i = 0;
+
     Pair *par = firstMap(productosPorCodigo);
-    while (par != NULL) {
+    while (par != NULL && i < 10) {
         Producto *producto = (Producto *)par->value;
 
         if (producto->vendidos <= umbral_ventas_bajas) {
@@ -572,7 +601,7 @@ void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCatego
                 List *lista = (List *)parCat->value;
                 Producto *candidato = list_first(lista);
                 while (candidato != NULL) {
-                    if (candidato != producto && candidato->vendidos > 10) {
+                    if (candidato != producto && (candidato->vendidos - producto->vendidos) <= 5 && strcmp(candidato->categoria, producto->categoria) == 0) {
                         printf("→ Sugerencia: crear combo con '%s' (vendidos: %d)\n",
                                candidato->nombre, candidato->vendidos);
                         break;
@@ -586,6 +615,7 @@ void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCatego
         }
 
         par = nextMap(productosPorCodigo);
+        i++;
     }
 
     presioneTeclaParaContinuar();
@@ -705,7 +735,7 @@ void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPor
             Producto* prodInventario = (Producto*)pair->value;
             // Aumenta el contador de vendidos
             prodInventario->vendidos += producto->stock;
-            if(strcmp(prodInventario->nombre, producto->nombre != 0)) strcpy(prodInventario->nombre, producto->nombre);
+            if(strcmp(prodInventario->nombre, producto->nombre) != 0) strcpy(prodInventario->nombre, producto->nombre);
 
             prodInventario->precioVenta += producto->precioVenta;
             
@@ -726,6 +756,6 @@ void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPor
     }
     printf("Compra confirmada exitosamente.\n");
 
-    mostrarCarrito(compraHecha);
+    //mostrarCarrito(compraHecha);
 
 }

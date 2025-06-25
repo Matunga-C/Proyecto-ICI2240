@@ -34,7 +34,7 @@ void mostrarVentasProductos(HashMap *productosPorCodigo);
 
 void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre);
 
-void buscarProductoPorNombre(HashMap *productosPorNombre);
+void buscarPorNombre(HashMap *productosPorNombre);
 
 void modificarStock(HashMap *productosPorCodigo);
 
@@ -44,7 +44,7 @@ void guardarInventario(HashMap *productosPorCodigo);
 
 void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *productosPorCodigo, HashMap *productosPorCategoria);
 
-void listarProductosPorCategoria(HashMap *productosPorCategoria);
+void buscarPorCategoria(HashMap *productosPorCategoria);
 
 void mostrarProductosStock(HashMap *productosPorCategoria);
 

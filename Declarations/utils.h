@@ -20,4 +20,8 @@ void insertarFrecuencia(HashMap *graph, char *nameA, char *nameB);
 
 void mostrarCarrito(List* list);
 
+void trimWhitespace(char* str);
+
+void toLowerCase(char* str);
+
 #endif /* UTILS_H */

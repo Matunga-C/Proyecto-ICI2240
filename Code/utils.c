@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include "utils.h"
 #include "List.h"
 #include "Map.h"
@@ -138,3 +139,23 @@ void mostrarCarrito(List* compra){
     printf("Total de la compra: %u", tComprado);
 
 }
+
+void toLowerCase(char* str) {
+    for (int i = 0; str[i]; i++) {
+        str[i] = tolower(str[i]);
+    }
+}
+
+void trimWhitespace(char* str) {
+    char* end;
+
+    // Eliminar espacios iniciales
+    while (isspace((unsigned char)*str)) str++;
+
+    // Eliminar espacios finales
+    end = str + strlen(str) - 1;
+    while (end > str && isspace((unsigned char)*end)) end--;
+
+    // Escribir el carácter nulo al final
+    *(end + 1) = '\0';
+}    
