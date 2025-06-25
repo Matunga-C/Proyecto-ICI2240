@@ -203,37 +203,38 @@ void buscarPorNombre(HashMap *productosPorNombre) {
     presioneTeclaParaContinuar();
 }
 
+//Función encargada de buscar productos por categoría
 void buscarPorCategoria(HashMap *productosPorCategoria){
     limpiarPantalla();
-
+    // Se indexa el mapa para mostrar las categorías disponibles
     Pair* temp = firstMap(productosPorCategoria);
-
     printf("Categorías disponibles:\n");
-
     while(temp != NULL){
         printf("- %s\n", (char*)temp->key);
         temp = nextMap(productosPorCategoria);
     }
-
+    // Solicita al usuario que ingrese la categoría a buscar
     char categoria[51];
     printf("Ingrese la categoría de productos a listar: ");
     fgets(categoria, sizeof(categoria), stdin);
     categoria[strcspn(categoria, "\n")] = 0; // Eliminar salto de línea
-
+    // Se busca la categoría en el mapa de productos por categoría, si no lo encuentra mustra un mensaje de error.
     Pair *pair = searchMap(productosPorCategoria, categoria);
     if (pair == NULL) {
         printf("No se encontraron productos en la categoría '%s'.\n", categoria);
         presioneTeclaParaContinuar();
         return;
     }
-
+    // Si se encuentra la categoría, se obtiene la lista de productos y se itera sobre ella para mostrar los detalles
     List *listaProductos = (List *)pair->value;
     Producto *producto = list_first(listaProductos);
     if (!producto) {
+        // Si la lista de productos está vacía, se muestra un mensaje de error
         printf("No se encontraron productos en la categoría '%s'.\n", categoria);
         presioneTeclaParaContinuar();
         return;
     }
+    // Se muestra la información de los productos encontrados en la categoría
     printf("\nProductos en la categoría '%s':\n", categoria);
     while (producto) {
         printf("\n");
@@ -252,11 +253,12 @@ void buscarPorCategoria(HashMap *productosPorCategoria){
     presioneTeclaParaContinuar();
 }
 
+//Función que muestra los productos con stock mayor o menor al umbral ingresado por el usuario
 void mostrarProductosStock(HashMap *productosPorCodigo) {
     limpiarPantalla();
     int umbral, opcion, contador = 0;
 
-    // Solicitar al usuario el umbral
+    // Solicitar al usuario el umbral desde el que desea ver los productos por stock
     printf("Ingrese el umbral de stock: ");
     scanf("%d", &umbral);
     getchar(); // Limpiar buffer
@@ -268,7 +270,8 @@ void mostrarProductosStock(HashMap *productosPorCodigo) {
     printf("Opción: ");
     scanf("%d", &opcion);
     getchar(); // Limpiar buffer
-
+    // Limpiar pantalla para mostrar los resultados
+    // Se muestra el mensaje correspondiente según la opción seleccionada
     limpiarPantalla();
     if (opcion == 1) {
         printf("Productos con stock <= %d:\n", umbral);
@@ -298,7 +301,7 @@ void mostrarProductosStock(HashMap *productosPorCodigo) {
         }
         pair = nextMap(productosPorCodigo);
     }
-
+    // Si no se encontraron productos que cumplan con las condiciones, se muestra un mensaje
     if (contador == 0) {
         printf("No se encontraron productos con las condiciones especificadas.\n");
     }
