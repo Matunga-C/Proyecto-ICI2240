@@ -17,6 +17,12 @@ typedef struct {
     char marca[51];
 } Producto;
 
+typedef struct {
+    char nombre[51];
+    int cantidadVentas;
+} NombreVenta;
+
+
 
 void presioneTeclaParaContinuar();
 
@@ -52,7 +58,7 @@ void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito);
 
 void eliminarDelCarrito(List *carrito);
 
-void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorCodigo);
+void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorCodigo, HashMap *contadorProducto);
 
 void generarReporte(HashMap *productosPorCodigo, HashMap *productosPorCategoria, List *historialCompras);
 

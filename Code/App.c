@@ -525,7 +525,7 @@ void guardarInventario(HashMap* productosPorCodigo) {
     presioneTeclaParaContinuar();
 }
 
-void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria, List* historialCompras) {
+void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria, List* historialCompras, HashMap *contadorProducto) {
     limpiarPantalla();
     printf("=== Reporte con sugerencias automáticas ===\n\n");
 
@@ -717,7 +717,7 @@ void verCarrito(List *carrito) {
     presioneTeclaParaContinuar();
 }
 
-void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPorCodigo){
+void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPorCodigo, HashMap *contadorProducto){
     limpiarPantalla();
 
     if(list_first(carrito) == NULL){
@@ -727,19 +727,29 @@ void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPor
     }
 
     List* compraHecha = list_create();
-
     Producto* producto = list_first(carrito);
+    
     while (producto != NULL) {
         // Busca el producto en el inventario
+        Pair* pairProd = searchMap(contadorProducto, producto->nombre);
+        if(pairProd != NULL){
+            pairProd->value += producto->vendidos;
+        }else{
+            insertMap(contadorProducto, producto->nombre, producto->vendidos);
+        }
+
         Pair* pair = searchMap(productosPorCodigo, producto->codigoBarras);
         if (pair != NULL) {
+            
             Producto* prodInventario = (Producto*)pair->value;
+            
             // Aumenta el contador de vendidos
             prodInventario->vendidos += producto->stock;
+            // Verifica si está el nombre añadido
             if(strcmp(prodInventario->nombre, producto->nombre) != 0) strcpy(prodInventario->nombre, producto->nombre);
-
+            // Aumenta el Total de ventas
             prodInventario->precioVenta += producto->precioVenta;
-            
+
             // Agrega el producto al historial de compras
             list_pushBack(compraHecha, prodInventario);
         }
