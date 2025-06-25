@@ -119,25 +119,28 @@ void insertarFrecuencia(HashMap *graph, char *nameA, char *nameB){
     }
 }
 
-void mostrarCarrito(List* compra){
-    // Agregar mostrar los productos comprados y el total de la compra
-
-    printf("Compra realizada: \n");
-
-    Producto* prodTemp = list_first(compra);
-    unsigned int tComprado = 0; 
-    unsigned int tLlevado = 0;
-
-    while(prodTemp != NULL){
-        printf("Producto : %s\n", prodTemp->nombre);
-        printf("Cantidad llevada: %d\n\n", prodTemp->vendidos);
-        tComprado += prodTemp->precioVenta;
-        tLlevado += prodTemp->vendidos;
+void mostrarCarrito(List *carrito) {
+    limpiarPantalla();
+    Producto *prod = list_first(carrito);
+    if (!prod) {
+        printf("El carrito está vacío.\n");
+        presioneTeclaParaContinuar();
+        return;
     }
-
-    printf("Total productos llevados %u", tLlevado);
-    printf("Total de la compra: %u", tComprado);
-
+    printf("=== Carrito de Compras ===\n");
+    int idx = 1;
+    float total = 0;
+    while (prod) {
+        float subtotal = prod->precioVenta * prod->stock;
+        printf("%d. %s | Marca: %s | Cantidad: %d | Precio unitario: %.2f | Subtotal: %.2f\n",
+               idx, prod->nombre, prod->marca, prod->stock, prod->precioVenta, subtotal);
+        total += subtotal;
+        prod = list_next(carrito);
+        idx++;
+    }
+    printf("-----------------------------\n");
+    printf("Total a pagar: %.2f\n", total);
+    presioneTeclaParaContinuar();
 }
 
 void toLowerCase(char* str) {
@@ -158,4 +161,4 @@ void trimWhitespace(char* str) {
 
     // Escribir el carácter nulo al final
     *(end + 1) = '\0';
-}    
+}
