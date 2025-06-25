@@ -69,12 +69,12 @@ int main() {
                         switch (opcionModificar) {
                             case 1: registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
                             case 2: modificarStock(productosPorCodigo); break;
-                            case 3: eliminarProducto(productosPorCodigo, productosPorCategoria); break;
+                            case 3: eliminarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
                             default: printf("Opción no válida.\n");
                         }
                         break;
                     case 4: guardarInventario(productosPorCodigo); break;
-                    case 5: generarReporte(productosPorCodigo, productosPorCategoria, historialCompras); break;
+                    case 5: generarReporte(productosPorCodigo, productosPorCategoria, historialCompras, contadorProducto); break;
                     default: printf("Opción no válida.\n");
                 }
             }

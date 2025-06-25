@@ -44,7 +44,7 @@ void buscarPorNombre(HashMap *productosPorNombre);
 
 void modificarStock(HashMap *productosPorCodigo);
 
-void eliminarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria);
+void eliminarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre);
 
 void guardarInventario(HashMap *productosPorCodigo);
 
@@ -60,7 +60,7 @@ void eliminarDelCarrito(List *carrito);
 
 void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorCodigo, HashMap *contadorProducto);
 
-void generarReporte(HashMap *productosPorCodigo, HashMap *productosPorCategoria, List *historialCompras);
+void generarReporte(HashMap *productosPorCodigo, HashMap *productosPorCategoria, List *historialCompras, HashMap *contadorProducto);
 
 void verCarrito(List *carrito);
 

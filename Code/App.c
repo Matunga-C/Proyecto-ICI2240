@@ -283,7 +283,8 @@ void mostrarProductosStock(HashMap *productosPorCodigo) {
         return;
     }
 
-    // Iterar sobre el mapa productosPorCodigo
+    // Iterar sobre el mapa productosPorCodigo mostrando solo los que cumplen con la condición del umbral
+    // Se utiliza un contador para llevar la cuenta de los productos que cumplen con la condición
     Pair *pair = firstMap(productosPorCodigo);
     while (pair != NULL) {
         Producto *producto = (Producto *)pair->value;
@@ -308,6 +309,7 @@ void mostrarProductosStock(HashMap *productosPorCodigo) {
     presioneTeclaParaContinuar();
 }
 
+//Función que muestra los productos con ventas mayores o menores al umbral ingresado por el usuario
 void mostrarVentasProductos(HashMap *productosPorCodigo) {
     limpiarPantalla();
     int umbral, opcion, contador = 0;
@@ -324,7 +326,8 @@ void mostrarVentasProductos(HashMap *productosPorCodigo) {
     printf("Opción: ");
     scanf("%d", &opcion);
     getchar(); // Limpiar buffer
-
+    // Limpiar pantalla para mostrar los resultados
+    // Se muestra el mensaje correspondiente según la opción seleccionada
     limpiarPantalla();
     if (opcion == 1) {
         printf("Productos con ventas <= %d:\n", umbral);
@@ -336,7 +339,8 @@ void mostrarVentasProductos(HashMap *productosPorCodigo) {
         return;
     }
 
-    // Iterar sobre el mapa productosPorCodigo
+    // Iterar sobre el mapa productosPorCodigo y mostrar los que cumplan con la condición de ventas
+    // Se utiliza un contador para llevar la cuenta de los productos que cumplen con la condición
     Pair *pair = firstMap(productosPorCodigo);
     while (pair != NULL) {
         Producto *producto = (Producto *)pair->value;
@@ -355,16 +359,20 @@ void mostrarVentasProductos(HashMap *productosPorCodigo) {
         }
         pair = nextMap(productosPorCodigo);
     }
-
+    // Si no se encontraron productos que cumplan con las condiciones, se muestra un mensaje
     if (contador == 0) {
         printf("No se encontraron productos con las condiciones especificadas.\n");
     }
     presioneTeclaParaContinuar();
 }
 
+//Función que registra un producto en el inventario
 void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre) {
     limpiarPantalla();
+    // Se crea un nuevo producto y se asigna memoria
+    puts("=== Registro de Producto ===");
     Producto *producto = malloc(sizeof(Producto));
+    //se le pide al usuario que ingrese los datos del producto
     printf("Ingrese el nombre del producto: ");
     fgets(producto->nombre, sizeof(producto->nombre), stdin);
     producto->nombre[strcspn(producto->nombre, "\n")] = 0; // Eliminar salto de línea
@@ -380,14 +388,15 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
     printf("Ingrese el código de barras del producto: ");
     fgets(producto->codigoBarras, sizeof(producto->codigoBarras), stdin);
     producto->codigoBarras[strcspn(producto->codigoBarras, "\n")] = 0; // Eliminar salto de línea
-
+    // Verifica si el código de barras ya existe en el inventario, si ya existe no se puede registrar el producto 
+    // y se muestra un mensaje de error
     if (searchMap(productosPorCodigo, producto->codigoBarras) != NULL) {
         puts("El código de barras ya existe. No se puede registrar el producto.");
         presioneTeclaParaContinuar();
         free(producto);
         return;
     }
-    
+    // Si no encuentra el código de barras, se le pide al usuario que ingrese los datos restantes del producto
     printf("Ingrese el stock del producto: ");
     scanf("%d", &producto->stock);
     getchar(); // Limpiar buffer
@@ -403,11 +412,13 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
     printf("Ingrese el precio de costo del producto: ");
     scanf("%f", &producto->precioCosto);
     getchar(); // Limpiar buffer
-
+    producto->vendidos = 0; 
+    // Se verifica si el producto ya existe en los mapas de productos por código, nombre y categoría
+    // Si no existe, se inserta el producto en los mapas correspondientes
     if (searchMap(productosPorCodigo, producto->codigoBarras) == NULL) {
-        
         insertMap(productosPorCodigo, producto->codigoBarras, producto);
     }
+    // Si ya existe, se agrega a la lista de productos con el mismo nombre o categoría
     if(searchMap(productosPorNombre, producto->nombre) == NULL) {
         List *listaProductos = list_create();
         list_pushBack(listaProductos, producto);
@@ -427,14 +438,15 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
     puts("Producto registrado exitosamente.");
     presioneTeclaParaContinuar();
 }
-
+//Función que modifica el stock de un producto existente en el inventario
 void modificarStock(HashMap* productosPorCodigo) {
     limpiarPantalla();
     char codBarra[51];
+    // Se solicita al usuario que ingrese el código de barras del producto a modificar
     printf("Ingrese el código de barras del producto a modificar: ");
     fgets(codBarra, sizeof(codBarra), stdin);
     codBarra[strcspn(codBarra, "\n")] = 0;
-
+    // Se busca el producto en el mapa de productos por código, en caso de no encontrarlo se muestra un mensaje de error
     Pair* pair = searchMap(productosPorCodigo, codBarra);
     if (pair == NULL) {
         printf("Producto no encontrado.\n");
@@ -442,23 +454,26 @@ void modificarStock(HashMap* productosPorCodigo) {
         return;
     }
     Producto* producto = (Producto*)pair->value;
+    // Se muestra el stock actual del producto y se solicita al usuario que ingrese el nuevo stock
     printf("Stock actual: %d\n", producto->stock);
     printf("Ingrese el nuevo stock: ");
     int nuevoStock;
     scanf("%d", &nuevoStock);
     getchar(); // Limpiar buffer
     producto->stock = nuevoStock;
+    // Se muestra un mensaje de éxito al modificar el stock del producto
     printf("Stock actualizado correctamente.\n");
     presioneTeclaParaContinuar();
 }
-
-void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategoria) {
+//Función que elimina un producto del inventario
+void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategoria, HashMap* productosPorNombre) {
     limpiarPantalla();
     char codBarra[51];
+    // Se solicita al usuario que ingrese el código de barras del producto a eliminar
     printf("Ingrese el código de barras del producto a eliminar: ");
     fgets(codBarra, sizeof(codBarra), stdin);
     codBarra[strcspn(codBarra, "\n")] = 0;
-
+    // Se busca el producto en el mapa de productos por código, en caso de no encontrarlo se muestra un mensaje de error
     Pair* pair = searchMap(productosPorCodigo, codBarra);
     if (pair == NULL) {
         printf("Producto no encontrado.\n");
@@ -467,10 +482,29 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
     }
     Producto* producto = (Producto*)pair->value;
 
-    // Eliminar de productosPorCategoria
+    // Elimina el producto de productosPorCategoria
     Pair* pairCat = searchMap(productosPorCategoria, producto->categoria);
     if (pairCat != NULL) {
         List* lista = (List*)pairCat->value;
+        Producto* prodLista = list_first(lista);
+        int idx = 0;
+        while (prodLista != NULL) {
+            if (strcmp(prodLista->codigoBarras, codBarra) == 0) {
+                // Eliminar de la lista
+                // Mover current a la posición correcta
+                list_first(lista);
+                for (int i = 0; i < idx; i++) list_next(lista);
+                list_popCurrent(lista);
+                break;
+            }
+            prodLista = list_next(lista);
+            idx++;
+        }
+    }
+    // Elimina el producto de productosPorNombre
+    Pair* pairNom = searchMap(productosPorNombre, producto->nombre);
+    if (pairNom != NULL) {
+        List* lista = (List*)pairNom->value;
         Producto* prodLista = list_first(lista);
         int idx = 0;
         while (prodLista != NULL) {
