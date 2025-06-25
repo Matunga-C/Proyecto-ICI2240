@@ -117,3 +117,24 @@ void insertarFrecuencia(HashMap *graph, char *nameA, char *nameB){
         insertMap(relationsA, nameB, newFrecuency);
     }
 }
+
+void mostrarCarrito(List* compra){
+    // Agregar mostrar los productos comprados y el total de la compra
+
+    printf("Compra realizada: \n");
+
+    Producto* prodTemp = list_first(compra);
+    unsigned int tComprado = 0; 
+    unsigned int tLlevado = 0;
+
+    while(prodTemp != NULL){
+        printf("Producto : %s\n", prodTemp->nombre);
+        printf("Cantidad llevada: %d\n\n", prodTemp->vendidos);
+        tComprado += prodTemp->precioVenta;
+        tLlevado += prodTemp->vendidos;
+    }
+
+    printf("Total productos llevados %u", tLlevado);
+    printf("Total de la compra: %u", tComprado);
+
+}

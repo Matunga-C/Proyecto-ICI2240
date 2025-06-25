@@ -705,8 +705,12 @@ void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPor
             Producto* prodInventario = (Producto*)pair->value;
             // Aumenta el contador de vendidos
             prodInventario->vendidos += producto->stock;
+            if(strcmp(prodInventario->nombre, producto->nombre != 0)) strcpy(prodInventario->nombre, producto->nombre);
+
+            prodInventario->precioVenta += producto->precioVenta;
+            
             // Agrega el producto al historial de compras
-            list_pushBack(compraHecha, prodInventario);
+            list_pushBack(compraHecha, prodInventarsio);
         }
         
         producto = list_next(carrito);
@@ -722,6 +726,7 @@ void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPor
     }
     printf("Compra confirmada exitosamente.\n");
 
-    // Agregar mostrar los productos comprados y el total de la compra
+    mostrarCarrito(compraHecha);
+
 }
 

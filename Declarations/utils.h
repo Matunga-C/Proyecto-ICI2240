@@ -17,4 +17,7 @@ void limpiarPantalla();
 void presioneTeclaParaContinuar();
 
 void insertarFrecuencia(HashMap *graph, char *nameA, char *nameB);
+
+void mostrarCarrito(List* list);
+
 #endif /* UTILS_H */
