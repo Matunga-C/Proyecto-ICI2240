@@ -55,7 +55,7 @@ int main() {
                             case 1: buscarProductoPorNombre(productosPorNombre); break;
                             case 2: listarProductosPorCategoria(productosPorCategoria); break;
                             case 3: mostrarProductosStock(productosPorCodigo); break;
-                            case 4: mostrarVentasProductos(productosPorCodigo); break; // Esta función no está implementada
+                            case 4: mostrarVentasProductos(productosPorCodigo); break; 
                             default: printf("Opción no válida.\n");
                         }
                         break;
