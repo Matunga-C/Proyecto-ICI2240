@@ -102,6 +102,7 @@ void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *prod
         //Asigna la marca del producto
         trimWhitespace(campos[2]);
         toLowerCase(campos[2]);
+
         strncpy(producto->marca, campos[2], sizeof(producto->marca) - 1);
         producto->marca[sizeof(producto->marca) - 1] = '\0';
         
