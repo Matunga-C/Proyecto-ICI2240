@@ -92,3 +92,75 @@ void guardarInventario(HashMap* productosPorCodigo) {
     printf("Inventario guardado en '%s'.\n", nombreArchivo);
     presioneTeclaParaContinuar();
 }
+
+void insertarFrecuencia(HashMap *graph, char *nameA, char *nameB){
+    
+    Pair* parA = searchMap(graph, nameA);
+    if(!parA){
+        HashMap* relations = createMap(2000);
+        insertMap(graph, nameA, relations);
+        parA = searchMap(graph, nameA);
+    }
+
+    HashMap* relationsA = (HashMap*)parA->value;
+    Pair* parB = searchMap(relationsA, nameB);
+    if(parB){
+       int* frecuency = (int*)parB->value;
+       (*frecuency)++;
+    }
+    else{
+        int* newFrecuency = malloc(sizeof(int));
+        *newFrecuency = 1;
+        insertMap(relationsA, nameB, newFrecuency);
+    }
+}
+
+void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPorCodigo){
+    limpiarPantalla();
+
+    if(list_first(carrito) == NULL){
+        printf("El carrito está vacío. No se puede confirmar la compra.\n");
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    List* compraHecha = list_create();
+
+    Producto* producto = list_first(carrito);
+    while (producto != NULL) {
+        // Busca el producto en el inventario
+        Pair* pair = searchMap(productosPorCodigo, producto->codigoBarras);
+        if (pair != NULL) {
+            Producto* prodInventario = (Producto*)pair->value;
+            // Aumenta el contador de vendidos
+            prodInventario->vendidos += producto->stock;
+            // Agrega el producto al historial de compras
+            list_pushBack(compraHecha, prodInventario);
+        }
+        
+        producto = list_next(carrito);
+    }    
+
+    // Agrega la compra hecha al historial de compras
+    list_pushBack(historialCompras, compraHecha);
+
+    // Limpia el carrito
+    while (list_first(carrito) != NULL) {
+        Producto* prod = list_popCurrent(carrito);
+        free(prod); // Libera la memoria del producto
+    }
+    printf("Compra confirmada exitosamente.\n");
+
+    // Agregar mostrar los productos comprados y el total de la compra
+}
+
+void insertarFrecuenciaGrafo(HashMap* graph, Producto* prodA, Producto* prodB);
+
+void generarReporte(HashMap *productosPorCodigo, HashMap *productosPorCategoria, List *historialCompras);
+
+void verCarrito(List *carrito);
+
+void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria);
+
+
+void insertarFrecuencia(HashMap *graph, char *nameA, char *nameB);
