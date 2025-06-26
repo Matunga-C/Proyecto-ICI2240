@@ -500,6 +500,7 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
             prodLista = list_next(lista);
             idx++;
         }
+        // Si la lista de productos en esa categoría queda vacía, se elimina la categoría del mapa
         if (list_first(lista) == NULL) {
             eraseMap(productosPorCategoria, producto->categoria);
         }
@@ -522,6 +523,7 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
             prodLista = list_next(lista);
             idx++;
         }
+        // Si la lista de productos con ese nombre queda vacía, se elimina el nombre del mapa
         if (list_first(lista) == NULL) {
             eraseMap(productosPorNombre, producto->nombre);
         }
@@ -534,8 +536,10 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
     presioneTeclaParaContinuar();
 }
 
+//Función que guarda el inventario en un archivo CSV
 void guardarInventario(HashMap* productosPorCodigo) {
     limpiarPantalla();
+    //se define el nombre del archivo CSV donde se guardará el inventario
     char nombreArchivo[100] = "inventario_guardado.csv";
     FILE* archivo = fopen(nombreArchivo, "w");
     if (!archivo) {
@@ -545,6 +549,8 @@ void guardarInventario(HashMap* productosPorCodigo) {
     }
     // Escribir encabezado
     fprintf(archivo, "ID, Nombre,Marca,Categoria,CodigoBarras,Stock,PrecioVenta,PrecioMercado,PrecioCosto,Vendidos\n");
+    //se traspasan todos los produtos del mapa productosPorCodigo al archivo CSV
+    // Se itera sobre el mapa de productos por código y se escribe cada producto en el
     Pair* pair = firstMap(productosPorCodigo);
     size_t idx = 0;
     while (pair != NULL) {
@@ -564,6 +570,7 @@ void guardarInventario(HashMap* productosPorCodigo) {
         idx++;
     }
     fclose(archivo);
+    // Se muestra un mensaje de éxito al guardar el inventario y el nombre del archivo
     printf("Inventario guardado en '%s'.\n", nombreArchivo);
     presioneTeclaParaContinuar();
 }
@@ -621,7 +628,7 @@ void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria,
     presioneTeclaParaContinuar();
 }
 
-
+// Función que suguiere promociones para productos con bajas ventas
 void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria) {
     limpiarPantalla();
     printf("=== Productos con pocas ventas: Sugerencias de promoción ===\n");
@@ -665,30 +672,34 @@ void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCatego
     presioneTeclaParaContinuar();
 }
 
+// Función que agrega un producto al carrito de compras
 void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito) {
     limpiarPantalla();
     char codigo[51];
+    // Se solicita al usuario que ingrese el código de barras del producto a agregar al carrito
     printf("Ingrese el código de barras del producto a agregar: ");
     fgets(codigo, sizeof(codigo), stdin);
     codigo[strcspn(codigo, "\n")] = 0;
-
+    // Se busca el producto en el mapa de productos por código, sino lo encuentra, muestra un mensaje de error
     Pair *pair = searchMap(productosPorCodigo, codigo);
     if (!pair) {
         printf("Producto no encontrado.\n");
         presioneTeclaParaContinuar();
         return;
     }
+    // Si encuentra el producto, verifica si hay stock disponible, en caso de no haber stock, muestra un mensaje de error
     Producto *producto = (Producto *)pair->value;
     if (producto->stock <= 0) {
         printf("No hay stock disponible para este producto.\n");
         presioneTeclaParaContinuar();
         return;
     }
+    // Si hay stock, solicita al usuario que ingrese la cantidad a agregar al carrito
     int cantidad;
     printf("Ingrese la cantidad a agregar: ");
     scanf("%d", &cantidad);
     getchar(); // Limpiar buffer
-
+    // Si la cantidad de productos es inválida (menor o igual a 0 o mayor que el stock disponible), muestra un mensaje de error
     if (cantidad <= 0 || cantidad > producto->stock) {
         printf("Cantidad inválida o insuficiente stock.\n");
         presioneTeclaParaContinuar();
@@ -700,14 +711,16 @@ void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito) {
     *productoCarrito = *producto;
     productoCarrito->stock = cantidad;
     list_pushBack(carrito, productoCarrito);
-
+    // Actualizar el stock del producto original
     producto->stock -= cantidad;
     printf("Producto agregado al carrito.\n");
     presioneTeclaParaContinuar();
 }
 
+//Función que elimina un producto del carrito de compras
 void eliminarDelCarrito(List *carrito) {
     limpiarPantalla();
+    // Verifica si el carrito está vacío
     if (list_first(carrito) == NULL) {
         printf("El carrito está vacío.\n");
         presioneTeclaParaContinuar();
@@ -715,6 +728,7 @@ void eliminarDelCarrito(List *carrito) {
     }
     int idx = 0, pos, total = 0;
     Producto *prod = list_first(carrito);
+    // Muestra los productos en el carrito y solicita al usuario que ingrese el número del producto a eliminar
     printf("Productos en el carrito:\n");
     while (prod) {
         printf("%d. %s | Marca: %s | Cantidad: %d\n", idx + 1, prod->nombre, prod->marca, prod->stock);
@@ -725,7 +739,7 @@ void eliminarDelCarrito(List *carrito) {
     printf("Ingrese el número del producto a eliminar: ");
     scanf("%d", &pos);
     getchar(); // Limpiar buffer
-
+    // Verifica si la posición ingresada es válida
     if (pos < 1 || pos > total) {
         printf("Opción inválida.\n");
         presioneTeclaParaContinuar();
@@ -734,20 +748,24 @@ void eliminarDelCarrito(List *carrito) {
     // Volver al inicio y avanzar hasta la posición
     list_first(carrito);
     for (int i = 1; i < pos; i++) list_next(carrito);
+    // Elimina el producto actual del carrito y libera la memoria
     Producto *eliminado = list_popCurrent(carrito);
     free(eliminado);
     printf("Producto eliminado del carrito.\n");
     presioneTeclaParaContinuar();
 }
 
+//Función que muestra los productos en el carrito de compras
 void verCarrito(List *carrito) {
     limpiarPantalla();
+    //verifica si el carrito está vacío
     Producto *prod = list_first(carrito);
     if (!prod) {
         printf("El carrito está vacío.\n");
         presioneTeclaParaContinuar();
         return;
     }
+    // Si hay productos en el carrito, muestra los detalles de cada producto
     printf("Productos en el carrito:\n");
     int idx = 1;
     float total = 0;
@@ -758,13 +776,15 @@ void verCarrito(List *carrito) {
         prod = list_next(carrito);
         idx++;
     }
+    // Muestra el total de la compra
     printf("Total: %.2f\n", total);
     presioneTeclaParaContinuar();
 }
 
+//Función que confirma la compra de los productos en el carrito
 void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPorCodigo, HashMap* contadorProducto) {
     limpiarPantalla();
-
+    // Verifica si el carrito está vacío
     if (list_first(carrito) == NULL) {
         printf("El carrito está vacío. No se puede confirmar la compra.\n");
         presioneTeclaParaContinuar();
@@ -774,13 +794,14 @@ void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPo
     List* compraHecha = list_create();
     Producto* producto = list_first(carrito);
 
-    // Mostra los productos que se van a comprar
+    // Muestra los productos que se van a comprar
     printf("Productos en el carrito:\n");
     while (producto != NULL) {
         printf("- %s | Marca: %s | Cantidad: %d | Precio unitario: %.2f\n",
                producto->nombre, producto->marca, producto->stock, producto->precioVenta);
         producto = list_next(carrito);
     }
+    // Pregunta al usuario si desea confirmar la compra
     printf("\nConfirmar compra? (s/n): ");
     char confirmacion;
     scanf(" %c", &confirmacion);
@@ -790,7 +811,6 @@ void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPo
         presioneTeclaParaContinuar();
         return;
     }
-
     while (producto != NULL) {
         // Busca el producto en el contador de productos
         Pair* pairProd = searchMap(contadorProducto, producto->nombre);
@@ -834,7 +854,7 @@ void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPo
         Producto* prod = list_popCurrent(carrito);
         free(prod); // Libera la memoria del producto
     }
-
+    // Muestra un mensaje de éxito al confirmar la compra
     printf("Compra confirmada exitosamente.\n");
     presioneTeclaParaContinuar();
 }
