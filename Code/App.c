@@ -500,6 +500,9 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
             prodLista = list_next(lista);
             idx++;
         }
+        if (list_first(lista) == NULL) {
+            eraseMap(productosPorCategoria, producto->categoria);
+        }
     }
     // Elimina el producto de productosPorNombre
     Pair* pairNom = searchMap(productosPorNombre, producto->nombre);
@@ -519,8 +522,11 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
             prodLista = list_next(lista);
             idx++;
         }
+        if (list_first(lista) == NULL) {
+            eraseMap(productosPorNombre, producto->nombre);
+        }
     }
-
+    
     // Eliminar de productosPorCodigo
     eraseMap(productosPorCodigo, codBarra);
 
@@ -675,6 +681,7 @@ void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito) {
     Producto *producto = (Producto *)pair->value;
     if (producto->stock <= 0) {
         printf("No hay stock disponible para este producto.\n");
+        presioneTeclaParaContinuar();
         return;
     }
     int cantidad;
@@ -684,6 +691,7 @@ void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito) {
 
     if (cantidad <= 0 || cantidad > producto->stock) {
         printf("Cantidad inválida o insuficiente stock.\n");
+        presioneTeclaParaContinuar();
         return;
     }
 
@@ -754,10 +762,10 @@ void verCarrito(List *carrito) {
     presioneTeclaParaContinuar();
 }
 
-void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPorCodigo, HashMap *contadorProducto){
+void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPorCodigo, HashMap* contadorProducto) {
     limpiarPantalla();
 
-    if(list_first(carrito) == NULL){
+    if (list_first(carrito) == NULL) {
         printf("El carrito está vacío. No se puede confirmar la compra.\n");
         presioneTeclaParaContinuar();
         return;
@@ -765,34 +773,58 @@ void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPor
 
     List* compraHecha = list_create();
     Producto* producto = list_first(carrito);
-    
+
+    // Mostra los productos que se van a comprar
+    printf("Productos en el carrito:\n");
     while (producto != NULL) {
-        // Busca el producto en el inventario
+        printf("- %s | Marca: %s | Cantidad: %d | Precio unitario: %.2f\n",
+               producto->nombre, producto->marca, producto->stock, producto->precioVenta);
+        producto = list_next(carrito);
+    }
+    printf("\nConfirmar compra? (s/n): ");
+    char confirmacion;
+    scanf(" %c", &confirmacion);
+    getchar(); // Limpiar buffer
+    if (confirmacion != 's' && confirmacion != 'S') {
+        printf("Compra cancelada.\n");
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    while (producto != NULL) {
+        // Busca el producto en el contador de productos
         Pair* pairProd = searchMap(contadorProducto, producto->nombre);
-        if(pairProd != NULL){
-            pairProd->value += producto->vendidos;
-        }else{
-            insertMap(contadorProducto, producto->nombre, producto->vendidos);
+        if (pairProd != NULL) {
+            int* vendidos = (int*)pairProd->value;
+            *vendidos += producto->stock;
+        } else {
+            int* vendidos = malloc(sizeof(int));
+            if (vendidos == NULL) {
+                printf("Error al asignar memoria.\n");
+                presioneTeclaParaContinuar();
+                return;
+            }
+            *vendidos = producto->stock;
+            insertMap(contadorProducto, producto->nombre, vendidos);
         }
 
+        // Busca el producto en el inventario
         Pair* pair = searchMap(productosPorCodigo, producto->codigoBarras);
         if (pair != NULL) {
-            
             Producto* prodInventario = (Producto*)pair->value;
-            
+
             // Aumenta el contador de vendidos
             prodInventario->vendidos += producto->stock;
-            // Verifica si está el nombre añadido
-            if(strcmp(prodInventario->nombre, producto->nombre) != 0) strcpy(prodInventario->nombre, producto->nombre);
-            // Aumenta el Total de ventas
-            prodInventario->precioVenta += producto->precioVenta;
+
+            // Aumenta el total de ventas
+            prodInventario->precioVenta += producto->precioVenta * producto->stock;
 
             // Agrega el producto al historial de compras
             list_pushBack(compraHecha, prodInventario);
         }
-        
+
         producto = list_next(carrito);
-    }    
+    }
 
     // Agrega la compra hecha al historial de compras
     list_pushBack(historialCompras, compraHecha);
@@ -802,8 +834,7 @@ void confirmarCompra(List* carrito, List*historialCompras, HashMap* productosPor
         Producto* prod = list_popCurrent(carrito);
         free(prod); // Libera la memoria del producto
     }
+
     printf("Compra confirmada exitosamente.\n");
-
-    //mostrarCarrito(compraHecha);
-
+    presioneTeclaParaContinuar();
 }
