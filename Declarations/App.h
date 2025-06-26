@@ -38,11 +38,11 @@ void menuModificarInventario();
 
 void mostrarVentasProductos(HashMap *productosPorCodigo);
 
-void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre);
+void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre, long double *balance);
 
 void buscarPorNombre(HashMap *productosPorNombre);
 
-void modificarStock(HashMap *productosPorCodigo);
+void modificarStock(HashMap *productosPorCodigo, long double *balance);
 
 void eliminarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre);
 
@@ -58,7 +58,7 @@ void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito);
 
 void eliminarDelCarrito(List *carrito);
 
-void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorCodigo, HashMap *contadorProducto);
+void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorCodigo, HashMap *contadorProducto, long double *balance);
 
 void generarReporte(HashMap *productosPorCodigo, HashMap *productosPorCategoria, List *historialCompras, HashMap *contadorProducto);
 

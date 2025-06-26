@@ -19,6 +19,7 @@ int main() {
     List *historialCompras = list_create();
 
     int opcion, tipoUsuario;
+    long double Balance = 0.0;
     while (1) {
         printf("\n=== Sistema de Gestión de Inventario ===\n");
         printf("1. Administrador\n2. Cliente\n0. Salir\n");
@@ -38,6 +39,9 @@ int main() {
 
                 switch (opcion) {
                     case 1:
+                        limpiarPantalla();
+                        puts("Ingrese el balance inicial del inventario: ");
+                        scanf("%Lf", &balance);
                         printf("Ingrese el nombre del archivo CSV para cargar el inventario: ");
                         char nombreArchivo[100];
                         fgets(nombreArchivo, sizeof(nombreArchivo), stdin);
@@ -61,14 +65,15 @@ int main() {
                             default: printf("Opción no válida.\n");
                         }
                         break;
-                    case 3: 
+                    case 3:
+                        limpiarPantalla(); 
                         menuModificarInventario();
                         int opcionModificar;
                         scanf("%d", &opcionModificar);
                         getchar(); // Limpiar buffer
                         switch (opcionModificar) {
-                            case 1: registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
-                            case 2: modificarStock(productosPorCodigo); break;
+                            case 1: registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre, &balance); break;
+                            case 2: modificarStock(productosPorCodigo, &balance); break;
                             case 3: eliminarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
                             default: printf("Opción no válida.\n");
                         }
@@ -90,7 +95,7 @@ int main() {
                     case 1: agregarAlCarrito(productosPorCodigo, carrito); break;
                     case 2: eliminarDelCarrito(carrito); break;
                     case 3: verCarrito(carrito); break;
-                    case 4: confirmarCompra(carrito, historialCompras, productosPorCodigo, contadorProducto); break;
+                    case 4: confirmarCompra(carrito, historialCompras, productosPorCodigo, contadorProducto, &balance); break;
                     default: printf("Opción no válida.\n");
                 }
             }

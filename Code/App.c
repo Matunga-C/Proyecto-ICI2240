@@ -367,7 +367,7 @@ void mostrarVentasProductos(HashMap *productosPorCodigo) {
 }
 
 //Función que registra un producto en el inventario
-void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre) {
+void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre, long double *balance) {
     limpiarPantalla();
     // Se crea un nuevo producto y se asigna memoria
     puts("=== Registro de Producto ===");
@@ -413,6 +413,7 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
     scanf("%f", &producto->precioCosto);
     getchar(); // Limpiar buffer
     producto->vendidos = 0; 
+    *balance -= (producto->precioCosto * producto->stock);
     // Se verifica si el producto ya existe en los mapas de productos por código, nombre y categoría
     // Si no existe, se inserta el producto en los mapas correspondientes
     if (searchMap(productosPorCodigo, producto->codigoBarras) == NULL) {
@@ -439,7 +440,7 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
     presioneTeclaParaContinuar();
 }
 //Función que modifica el stock de un producto existente en el inventario
-void modificarStock(HashMap* productosPorCodigo) {
+void modificarStock(HashMap* productosPorCodigo, long double *balance) {
     limpiarPantalla();
     char codBarra[51];
     // Se solicita al usuario que ingrese el código de barras del producto a modificar
@@ -457,10 +458,14 @@ void modificarStock(HashMap* productosPorCodigo) {
     // Se muestra el stock actual del producto y se solicita al usuario que ingrese el nuevo stock
     printf("Stock actual: %d\n", producto->stock);
     printf("Ingrese el nuevo stock: ");
+    int stockActual = producto->stock;
     int nuevoStock;
     scanf("%d", &nuevoStock);
     getchar(); // Limpiar buffer
     producto->stock = nuevoStock;
+    if (nuevoStock > stockActual){
+        *balance -= (producto->precioCosto * (nuevoStock - stockActual));
+    }
     // Se muestra un mensaje de éxito al modificar el stock del producto
     printf("Stock actualizado correctamente.\n");
     presioneTeclaParaContinuar();
@@ -782,7 +787,7 @@ void verCarrito(List *carrito) {
 }
 
 //Función que confirma la compra de los productos en el carrito
-void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPorCodigo, HashMap* contadorProducto) {
+void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPorCodigo, HashMap* contadorProducto, long double *balance) {
     limpiarPantalla();
     // Verifica si el carrito está vacío
     if (list_first(carrito) == NULL) {
@@ -842,7 +847,7 @@ void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPo
             // Agrega el producto al historial de compras
             list_pushBack(compraHecha, prodInventario);
         }
-
+        *balance += (producto->precioVenta * producto->stock); // Actualiza el balance
         producto = list_next(carrito);
     }
 
