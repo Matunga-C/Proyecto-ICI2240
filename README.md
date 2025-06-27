@@ -178,6 +178,7 @@ Presione una tecla para continuar...
 - El sistema utiliza estructuras hash para búsquedas eficientes.
 - Los archivos CSV deben tener el formato adecuado.
 - Si tienes problemas al compilar, revisa que las rutas y nombres de archivos sean correctos.
+- Si se quiere leer nuevamente el csv o leer el csv guardado se debe reiniciar el programa.
 
 ## Mejoras sugeridas
 - Implementar exportación/importación avanzada de inventario.
