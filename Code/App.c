@@ -440,7 +440,7 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
     presioneTeclaParaContinuar();
 }
 //Función que modifica el stock de un producto existente en el inventario
-void modificarStock(HashMap* productosPorCodigo, long double *balance) {
+void modificarStock(HashMap* productosPorCodigo, long double *balance, HashMap* productosPorCategoria, HashMap* productosPorNombre) {
     limpiarPantalla();
     char codBarra[51];
     // Se solicita al usuario que ingrese el código de barras del producto a modificar
@@ -465,6 +465,32 @@ void modificarStock(HashMap* productosPorCodigo, long double *balance) {
     producto->stock = nuevoStock;
     if (nuevoStock > stockActual){
         *balance -= (producto->precioCosto * (nuevoStock - stockActual));
+    }
+    Pair* pairNombre = searchMap(productosPorNombre, producto->nombre);
+    if (pairNombre != NULL) {
+        List* listaProductos = (List*)pairNombre->value;
+        Producto* prodLista = firstList(listaProductos);
+        while (prodLista != NULL) {
+            if (strcmp(prodLista->codigoBarras, codBarra) == 0) {
+                prodLista->stock = nuevoStock;
+                break;
+            }
+            prodLista = nextList(listaProductos);
+        }
+    }
+
+    // Actualiza el stock en el mapa de productos por categoría
+    Pair* pairCategoria = searchMap(productosPorCategoria, producto->categoria);
+    if (pairCategoria != NULL) {
+        List* listaProductosCategoria = (List*)pairCategoria->value;
+        Producto* prodLista = firstList(listaProductosCategoria);
+        while (prodLista != NULL) {
+            if (strcmp(prodLista->codigoBarras, codBarra) == 0) {
+                prodLista->stock = nuevoStock;
+                break;
+            }
+            prodLista = nextList(listaProductosCategoria);
+        }
     }
     // Se muestra un mensaje de éxito al modificar el stock del producto
     printf("Stock actualizado correctamente.\n");

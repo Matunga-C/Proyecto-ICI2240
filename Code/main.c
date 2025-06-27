@@ -76,7 +76,7 @@ int main() {
                         getchar(); // Limpiar buffer
                         switch (opcionModificar) {
                             case 1: registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre, &balance); break;
-                            case 2: modificarStock(productosPorCodigo, &balance); break;
+                            case 2: modificarStock(productosPorCodigo, &balance, productosPorCategoria, productosPorNombre); break;
                             case 3: eliminarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
                             default: printf("Opción no válida.\n");
                         }

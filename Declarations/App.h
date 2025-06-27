@@ -42,7 +42,7 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
 
 void buscarPorNombre(HashMap *productosPorNombre);
 
-void modificarStock(HashMap *productosPorCodigo, long double *balance);
+void modificarStock(HashMap *productosPorCodigo, long double *balance, HashMap *productosPorCategoria, HashMap *productosPorNombre);
 
 void eliminarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre);
 
