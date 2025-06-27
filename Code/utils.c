@@ -68,7 +68,7 @@ char **leer_linea_csv(FILE *archivo, char separador) {
 }
 
 List *split_string(const char *str, const char *delim) {
-  List *result = list_create();
+  List *result = createLIst();
   char *token = strtok((char *)str, delim);
 
   while (token != NULL) {
@@ -88,7 +88,7 @@ List *split_string(const char *str, const char *delim) {
     char *new_token = strdup(token);
 
     // Agregar el nuevo string a la lista
-    list_pushBack(result, new_token);
+    pushBackList(result, new_token);
 
     // Obtener el siguiente token
     token = strtok(NULL, delim);
@@ -121,7 +121,7 @@ void insertarFrecuencia(HashMap *graph, char *nameA, char *nameB){
 
 void mostrarCarrito(List *carrito) {
     limpiarPantalla();
-    Producto *prod = list_first(carrito);
+    Producto *prod = firstList(carrito);
     if (!prod) {
         printf("El carrito está vacío.\n");
         presioneTeclaParaContinuar();
@@ -135,7 +135,7 @@ void mostrarCarrito(List *carrito) {
         printf("%d. %s | Marca: %s | Cantidad: %d | Precio unitario: %.2f | Subtotal: %.2f\n",
                idx, prod->nombre, prod->marca, prod->stock, prod->precioVenta, subtotal);
         total += subtotal;
-        prod = list_next(carrito);
+        prod = nextList(carrito);
         idx++;
     }
     printf("-----------------------------\n");

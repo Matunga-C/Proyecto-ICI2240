@@ -17,7 +17,7 @@ typedef struct Node {
   
   typedef List List;
   
-  List *list_create() {
+  List *createList() {
     List *newList = (List *)malloc(sizeof(List));
     if (newList == NULL) {
       return NULL; // Fallo en la asignación de memoria
@@ -29,7 +29,7 @@ typedef struct Node {
     return newList;
   }
   
-  void *list_first(List *L) {
+  void *firstList(List *L) {
     if (L == NULL || L->head == NULL) {
       return NULL; // Lista vacía o no inicializada
     }
@@ -37,7 +37,7 @@ typedef struct Node {
     return L->current->data;
   }
   
-  void *list_next(List *L) {
+  void *nextList(List *L) {
     if (L == NULL || L->current == NULL || L->current->next == NULL) {
       return NULL; // Lista vacía, no inicializada o no hay más elementos
     }
@@ -45,7 +45,7 @@ typedef struct Node {
     return L->current->data;
   }
   
-  void list_pushFront(List *L, void *data) {
+  void pushFrontList(List *L, void *data) {
     if (L == NULL) {
       return; // Lista no inicializada
     }
@@ -62,7 +62,7 @@ typedef struct Node {
     L->size++;
   }
   
-  void list_pushBack(List *L, void *data) {
+  void pushBackList(List *L, void *data) {
     if (L == NULL) {
       return; // Lista no inicializada
     }
@@ -82,7 +82,7 @@ typedef struct Node {
     L->size++;
   }
   
-  void list_pushCurrent(List *L, void *data) {
+  void pushCurrentList(List *L, void *data) {
     if (L == NULL || L->current == NULL) {
       return; // Lista no inicializada o current no está definido
     }
@@ -99,7 +99,7 @@ typedef struct Node {
     L->size++;
   }
   
-  void list_sortedInsert(List *L, void *data,
+  void sortedInsertList(List *L, void *data,
                          int (*lower_than)(void *data1, void *data2)) {
     if (L == NULL) {
       return; // Lista no inicializada
@@ -107,7 +107,7 @@ typedef struct Node {
   
     // Caso especial: inserción al principio o en lista vacía
     if (L->head == NULL || lower_than(data, L->head->data)) {
-      list_pushFront(L, data);
+      pushFrontList(L, data);
       return;
     }
   
@@ -121,10 +121,10 @@ typedef struct Node {
     L->current = current;
   
     // Insertar el nodo en la posición actual
-    list_pushCurrent(L, data);
+    pushBackList(L, data);
   }
   
-  void *list_popFront(List *L) {
+  void *popFrontList(List *L) {
     if (L == NULL || L->head == NULL) {
       return NULL; // Lista vacía o no inicializada
     }
@@ -139,12 +139,12 @@ typedef struct Node {
     return data;
   }
   
-  void *list_popBack(List *L) {
+  void *popBackLIst(List *L) {
     if (L == NULL || L->head == NULL) {
       return NULL; // Lista vacía o no inicializada
     }
     if (L->head == L->tail) { // Solo un elemento en la lista
-      return list_popFront(L);
+      return popFrontList(L);
     }
     Node *current = L->head;
     while (current->next != L->tail) {
@@ -162,12 +162,12 @@ typedef struct Node {
       return L->size;
   }
   
-  void *list_popCurrent(List *L) {
+  void *popCurrentList(List *L) {
     if (L == NULL || L->current == NULL) {
       return NULL; // Lista no inicializada o current no definido
     }
     if (L->current == L->head) {
-      return list_popFront(L);
+      return popFrontList(L);
     }
     Node *temp = L->head;
     while (temp != NULL && temp->next != L->current) {
@@ -185,7 +185,7 @@ typedef struct Node {
     return data;
   }
   
-  void list_clean(List *L) {
+  void cleanList(List *L) {
     if (L == NULL) {
       return; // Lista no inicializada
     }

@@ -15,8 +15,8 @@ int main() {
     HashMap *productosPorCategoria = createMap(2000);
     HashMap *contadorProducto = createMap(2000);
 
-    List *carrito = list_create();
-    List *historialCompras = list_create();
+    List *carrito = createList();
+    List *historialCompras = createList();
 
     int opcion, tipoUsuario;
     long double Balance = 0.0;
@@ -87,7 +87,7 @@ int main() {
             while (1) {
                 mostrarMenuCliente();
                 scanf("%d", &opcion);
-                getchar(); // Limpiar buffer
+                getchar(); 
 
                 if (opcion == 0) break;
 
@@ -107,7 +107,8 @@ int main() {
     // Liberar memoria
     map_clean(productosPorCodigo);
     map_clean(productosPorCategoria);
-    //freeGraph(grafoCompras);
-    list_clean(carrito);
+    map_clean(contadorProducto);
+    cleanList(carrito);
+    cleanList(historialCompras);
     return 0;
 } 

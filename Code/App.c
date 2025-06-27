@@ -137,23 +137,23 @@ void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *prod
         // Insertar en el mapa de productosPorNombre
         Pair *pairNombre = searchMap(productosPorNombre, producto->nombre);
         if (pairNombre == NULL) {
-            List *listaProductos = list_create();
-            list_pushBack(listaProductos, producto);
+            List *listaProductos = createList();
+            pushBackList(listaProductos, producto);
             insertMap(productosPorNombre, producto->nombre, listaProductos);
         } else {
             List *listaProductos = (List *)pairNombre->value;
-            list_pushBack(listaProductos, producto);
+            pushBackList(listaProductos, producto);
         }
 
         // Insertar en productosPorCategoria
         Pair *pairCategoria = searchMap(productosPorCategoria, producto->categoria);
         if (pairCategoria == NULL) {
-            List *listaProductosCategoria = list_create();
-            list_pushBack(listaProductosCategoria, producto);
+            List *listaProductosCategoria = createList();
+            pushBackList(listaProductosCategoria, producto);
             insertMap(productosPorCategoria, producto->categoria, listaProductosCategoria);
         } else {
             List *listaProductosCategoria = (List *)pairCategoria->value;
-            list_pushBack(listaProductosCategoria, producto);
+            pushBackList(listaProductosCategoria, producto);
         }
     }
     //Se muestra un mensaje de éxito al cargar el inventario y se cierra el archivo
@@ -175,7 +175,7 @@ void buscarPorNombre(HashMap *productosPorNombre) {
         // Si se encuentra el producto, se muestra su información
         // Se obtiene la lista de productos con ese nombre y se itera sobre ella para mostrar los detalles
         List *listaProductos = (List *)pair->value;
-        Producto *producto = (Producto *)list_first(listaProductos);
+        Producto *producto = (Producto *)firtsLIst(listaProductos);
         if (!producto) {
             puts("No se encontraron productos con ese nombre.");
             presioneTeclaParaContinuar();
@@ -194,7 +194,7 @@ void buscarPorNombre(HashMap *productosPorNombre) {
             printf("Vendidos: %d\n", producto->vendidos);
             printf("-----------------------------\n");
 
-            producto = list_next(listaProductos);
+            producto = nextList(listaProductos);
         } 
     } else {
         // Si no se encuentra el producto, se muestra un mensaje no encontrado
@@ -227,7 +227,7 @@ void buscarPorCategoria(HashMap *productosPorCategoria){
     }
     // Si se encuentra la categoría, se obtiene la lista de productos y se itera sobre ella para mostrar los detalles
     List *listaProductos = (List *)pair->value;
-    Producto *producto = list_first(listaProductos);
+    Producto *producto = firtsLIst(listaProductos);
     if (!producto) {
         // Si la lista de productos está vacía, se muestra un mensaje de error
         printf("No se encontraron productos en la categoría '%s'.\n", categoria);
@@ -248,7 +248,7 @@ void buscarPorCategoria(HashMap *productosPorCategoria){
         printf("Vendidos: %d\n", producto->vendidos);
         printf("-------------------------------------------------------------\n");
 
-        producto = list_next(listaProductos);
+        producto = nextList(listaProductos);
     }
     presioneTeclaParaContinuar();
 }
@@ -421,20 +421,20 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
     }
     // Si ya existe, se agrega a la lista de productos con el mismo nombre o categoría
     if(searchMap(productosPorNombre, producto->nombre) == NULL) {
-        List *listaProductos = list_create();
-        list_pushBack(listaProductos, producto);
+        List *listaProductos = createList();
+        pushBackList(listaProductos, producto);
         insertMap(productosPorNombre, producto->nombre, listaProductos);
     } else {
         List *listaProductos = (List *)searchMap(productosPorNombre, producto->nombre)->value;
-        list_pushBack(listaProductos, producto);
+        pushBackList(listaProductos, producto);
     }
     if ((searchMap(productosPorCategoria, producto->categoria) == NULL)) {
-        List *listaProductosCategoria = list_create();
-        list_pushBack(listaProductosCategoria, producto);
+        List *listaProductosCategoria = createList();
+        pushBackList(listaProductosCategoria, producto);
         insertMap(productosPorCategoria, producto->categoria, listaProductosCategoria);
     } else {
         List *listaProductosCategoria = (List *)searchMap(productosPorCategoria, producto->categoria)->value;
-        list_pushBack(listaProductosCategoria, producto);
+        pushBackList(listaProductosCategoria, producto);
     }
     puts("Producto registrado exitosamente.");
     presioneTeclaParaContinuar();
@@ -491,22 +491,22 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
     Pair* pairCat = searchMap(productosPorCategoria, producto->categoria);
     if (pairCat != NULL) {
         List* lista = (List*)pairCat->value;
-        Producto* prodLista = list_first(lista);
+        Producto* prodLista = firtsLIst(lista);
         int idx = 0;
         while (prodLista != NULL) {
             if (strcmp(prodLista->codigoBarras, codBarra) == 0) {
                 // Eliminar de la lista
                 // Mover current a la posición correcta
-                list_first(lista);
-                for (int i = 0; i < idx; i++) list_next(lista);
-                list_popCurrent(lista);
+                firtsLIst(lista);
+                for (int i = 0; i < idx; i++) nextList(lista);
+                popCurrentList(lista);
                 break;
             }
-            prodLista = list_next(lista);
+            prodLista = nextList(lista);
             idx++;
         }
         // Si la lista de productos en esa categoría queda vacía, se elimina la categoría del mapa
-        if (list_first(lista) == NULL) {
+        if (firtsLIst(lista) == NULL) {
             eraseMap(productosPorCategoria, producto->categoria);
         }
     }
@@ -514,22 +514,22 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
     Pair* pairNom = searchMap(productosPorNombre, producto->nombre);
     if (pairNom != NULL) {
         List* lista = (List*)pairNom->value;
-        Producto* prodLista = list_first(lista);
+        Producto* prodLista = firtsLIst(lista);
         int idx = 0;
         while (prodLista != NULL) {
             if (strcmp(prodLista->codigoBarras, codBarra) == 0) {
                 // Eliminar de la lista
                 // Mover current a la posición correcta
-                list_first(lista);
-                for (int i = 0; i < idx; i++) list_next(lista);
-                list_popCurrent(lista);
+                firtsLIst(lista);
+                for (int i = 0; i < idx; i++) nextList(lista);
+                popCurrentList(lista);
                 break;
             }
-            prodLista = list_next(lista);
+            prodLista = nextList(lista);
             idx++;
         }
         // Si la lista de productos con ese nombre queda vacía, se elimina el nombre del mapa
-        if (list_first(lista) == NULL) {
+        if (firtsLIst(lista) == NULL) {
             eraseMap(productosPorNombre, producto->nombre);
         }
     }
@@ -585,23 +585,23 @@ void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria,
     printf("=== Reporte con sugerencias automáticas ===\n\n");
 
     HashMap* graph = createMap(2000);
-    List* compra = list_first(historialCompras);
+    List* compra = firtsLIst(historialCompras);
 
     // Paso 1: construir el grafo a partir de historial
     while (compra != NULL) {
-        Producto* prodA = list_first(compra);
+        Producto* prodA = firtsLIst(compra);
         while (prodA != NULL) {
-            Producto* prodB = list_next(compra);
+            Producto* prodB = nextList(compra);
             while (prodB != NULL) {
                 if (strcmp(prodA->codigoBarras, prodB->codigoBarras) != 0) {
                     insertarFrecuencia(graph, prodA->nombre, prodB->nombre);
                     insertarFrecuencia(graph, prodB->nombre, prodA->nombre);
                 }
-                prodB = list_next(compra);
+                prodB = nextList(compra);
             }
-            prodA = list_next(compra);
+            prodA = nextList(compra);
         }
-        compra = list_next(historialCompras);
+        compra = nextList(historialCompras);
     }
 
     // Paso 2: mostrar combos frecuentes
@@ -655,14 +655,14 @@ void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCatego
             Pair *parCat = searchMap(productosPorCategoria, producto->categoria);
             if (parCat != NULL) {
                 List *lista = (List *)parCat->value;
-                Producto *candidato = list_first(lista);
+                Producto *candidato = firtsLIst(lista);
                 while (candidato != NULL) {
                     if (candidato != producto && (candidato->vendidos - producto->vendidos) <= 5 && strcmp(candidato->categoria, producto->categoria) == 0) {
                         printf("→ Sugerencia: crear combo con '%s' (vendidos: %d)\n",
                                candidato->nombre, candidato->vendidos);
                         break;
                     }
-                    candidato = list_next(lista);
+                    candidato = nextList(lista);
                 }
             }
 
@@ -715,7 +715,7 @@ void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito) {
     Producto *productoCarrito = malloc(sizeof(Producto));
     *productoCarrito = *producto;
     productoCarrito->stock = cantidad;
-    list_pushBack(carrito, productoCarrito);
+    pushBackList(carrito, productoCarrito);
     // Actualizar el stock del producto original
     producto->stock -= cantidad;
     printf("Producto agregado al carrito.\n");
@@ -726,18 +726,18 @@ void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito) {
 void eliminarDelCarrito(List *carrito) {
     limpiarPantalla();
     // Verifica si el carrito está vacío
-    if (list_first(carrito) == NULL) {
+    if (firtsLIst(carrito) == NULL) {
         printf("El carrito está vacío.\n");
         presioneTeclaParaContinuar();
         return;
     }
     int idx = 0, pos, total = 0;
-    Producto *prod = list_first(carrito);
+    Producto *prod = firtsLIst(carrito);
     // Muestra los productos en el carrito y solicita al usuario que ingrese el número del producto a eliminar
     printf("Productos en el carrito:\n");
     while (prod) {
         printf("%d. %s | Marca: %s | Cantidad: %d\n", idx + 1, prod->nombre, prod->marca, prod->stock);
-        prod = list_next(carrito);
+        prod = nextList(carrito);
         idx++;
     }
     total = idx;
@@ -751,10 +751,10 @@ void eliminarDelCarrito(List *carrito) {
         return;
     }
     // Volver al inicio y avanzar hasta la posición
-    list_first(carrito);
-    for (int i = 1; i < pos; i++) list_next(carrito);
+    firtsLIst(carrito);
+    for (int i = 1; i < pos; i++) nextList(carrito);
     // Elimina el producto actual del carrito y libera la memoria
-    Producto *eliminado = list_popCurrent(carrito);
+    Producto *eliminado = popCurrentList(carrito);
     free(eliminado);
     printf("Producto eliminado del carrito.\n");
     presioneTeclaParaContinuar();
@@ -764,7 +764,7 @@ void eliminarDelCarrito(List *carrito) {
 void verCarrito(List *carrito) {
     limpiarPantalla();
     //verifica si el carrito está vacío
-    Producto *prod = list_first(carrito);
+    Producto *prod = firtsLIst(carrito);
     if (!prod) {
         printf("El carrito está vacío.\n");
         presioneTeclaParaContinuar();
@@ -778,7 +778,7 @@ void verCarrito(List *carrito) {
         printf("%d. %s | Marca: %s | Cantidad: %d | Precio unitario: %.2f | Subtotal: %.2f\n",
             idx, prod->nombre, prod->marca, prod->stock, prod->precioVenta, prod->precioVenta * prod->stock);
         total += prod->precioVenta * prod->stock;
-        prod = list_next(carrito);
+        prod = nextList(carrito);
         idx++;
     }
     // Muestra el total de la compra
@@ -790,21 +790,21 @@ void verCarrito(List *carrito) {
 void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPorCodigo, HashMap* contadorProducto, long double *balance) {
     limpiarPantalla();
     // Verifica si el carrito está vacío
-    if (list_first(carrito) == NULL) {
+    if (firtsLIst(carrito) == NULL) {
         printf("El carrito está vacío. No se puede confirmar la compra.\n");
         presioneTeclaParaContinuar();
         return;
     }
 
-    List* compraHecha = list_create();
-    Producto* producto = list_first(carrito);
+    List* compraHecha = createList();
+    Producto* producto = firtsLIst(carrito);
 
     // Muestra los productos que se van a comprar
     printf("Productos en el carrito:\n");
     while (producto != NULL) {
         printf("- %s | Marca: %s | Cantidad: %d | Precio unitario: %.2f\n",
                producto->nombre, producto->marca, producto->stock, producto->precioVenta);
-        producto = list_next(carrito);
+        producto = nextList(carrito);
     }
     // Pregunta al usuario si desea confirmar la compra
     printf("\nConfirmar compra? (s/n): ");
@@ -845,18 +845,18 @@ void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPo
             prodInventario->precioVenta += producto->precioVenta * producto->stock;
 
             // Agrega el producto al historial de compras
-            list_pushBack(compraHecha, prodInventario);
+            pushBackList(compraHecha, prodInventario);
         }
         *balance += (producto->precioVenta * producto->stock); // Actualiza el balance
-        producto = list_next(carrito);
+        producto = nextList(carrito);
     }
 
     // Agrega la compra hecha al historial de compras
-    list_pushBack(historialCompras, compraHecha);
+    pushBackList(historialCompras, compraHecha);
 
     // Limpia el carrito
-    while (list_first(carrito) != NULL) {
-        Producto* prod = list_popCurrent(carrito);
+    while (firtsLIst(carrito) != NULL) {
+        Producto* prod = popCurrentList(carrito);
         free(prod); // Libera la memoria del producto
     }
     // Muestra un mensaje de éxito al confirmar la compra
