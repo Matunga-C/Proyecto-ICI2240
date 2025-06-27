@@ -58,7 +58,7 @@ void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito);
 
 void eliminarDelCarrito(List *carrito);
 
-void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorCodigo, HashMap *contadorProducto, long double *balance);
+void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorNombre ,HashMap *productosPorCategoria,HashMap *productosPorCodigo, HashMap *contadorProducto, long double *balance);
 
 void generarReporte(HashMap *productosPorCodigo, HashMap *productosPorCategoria, List *historialCompras, HashMap *contadorProducto);
 

@@ -98,7 +98,7 @@ int main() {
                     case 1: agregarAlCarrito(productosPorCodigo, carrito); break;
                     case 2: eliminarDelCarrito(carrito); break;
                     case 3: verCarrito(carrito); break;
-                    case 4: confirmarCompra(carrito, historialCompras, productosPorCodigo, contadorProducto, &balance); break;
+                    case 4: confirmarCompra(carrito, historialCompras, productosPorNombre, productosPorCategoria, productosPorCodigo, contadorProducto, &balance); break;
                     default: printf("Opción no válida.\n");
                 }
             }

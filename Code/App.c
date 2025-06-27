@@ -608,6 +608,42 @@ void guardarInventario(HashMap* productosPorCodigo) {
 
 void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria, List* historialCompras, HashMap *contadorProducto) {
     limpiarPantalla();
+    List *productosVendidos = createList();
+
+    // Iterar sobre el mapa contadorProducto
+    Pair *par = firstMap(contadorProducto);
+    while (par != NULL) {
+        NombreVenta *nombreVenta =  malloc(sizeof(NombreVenta));
+        if (nombreVenta == NULL) {
+            printf("Error al asignar memoria.\n");
+            presioneTeclaParaContinuar();
+            return;
+        }
+        strcpy(nombreVenta->nombre, par->key);
+        nombreVenta->cantidadVentas =(int )par->value;
+        pushBackList(productosVendidos, nombreVenta);
+        par = nextMap(contadorProducto);
+    }
+
+    // Ordenar la lista por cantidad de ventas (de mayor a menor)
+    for (NombreVenta * i = firstList(productosVendidos); i != NULL; i = nextList(productosVendidos)) {
+        for (NombreVenta* j = nextList(productosVendidos); j != NULL; j = nextList(productosVendidos)) {
+            if (i->cantidadVentas < j->cantidadVentas) {
+                // Intercambiar los elementos
+                NombreVenta temp = *i;
+                *i = *j;
+                *j = temp;
+            }
+        }
+    }
+
+    // Mostrar los 3 productos más vendidos
+    printf("Top 3 productos más vendidos:\n");
+    int contador = 0;
+    for (NombreVenta *producto = firstList(productosVendidos); producto != NULL && contador < 3; producto = nextList(productosVendidos)) {
+        printf("%d. %s - Ventas: %d\n", contador + 1, producto->nombre, producto->cantidadVentas);
+        contador++;
+    }
     printf("=== Reporte con sugerencias automáticas ===\n\n");
 
     HashMap* graph = createMap(2000);
@@ -661,7 +697,7 @@ void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria,
 
 // Función que suguiere promociones para productos con bajas ventas
 void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria) {
-    limpiarPantalla();
+
     printf("=== Productos con pocas ventas: Sugerencias de promoción ===\n");
 
     const int umbral_ventas_bajas = 3; // Puedes ajustar este valor
@@ -813,28 +849,31 @@ void verCarrito(List *carrito) {
 }
 
 //Función que confirma la compra de los productos en el carrito
-void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPorCodigo, HashMap* contadorProducto, long double *balance) {
+void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorNombre ,HashMap *productosPorCategoria,HashMap *productosPorCodigo, HashMap *contadorProducto, long double *balance) {
     limpiarPantalla();
+    float totalCompra = 0.0;
     // Verifica si el carrito está vacío
     if (firstList(carrito) == NULL) {
         printf("El carrito está vacío. No se puede confirmar la compra.\n");
         presioneTeclaParaContinuar();
         return;
     }
-
     List* compraHecha = createList();
     Producto* producto = firstList(carrito);
-
     // Muestra los productos que se van a comprar
     printf("Productos en el carrito:\n");
     while (producto != NULL) {
         printf("- %s | Marca: %s | Cantidad: %d | Precio unitario: %.2f\n",
                producto->nombre, producto->marca, producto->stock, producto->precioVenta);
+        totalCompra += producto->precioVenta * producto->stock;    
         producto = nextList(carrito);
     }
+    // Muestra el total de la compra
+    printf("Total de la compra: %.2f\n", totalCompra);
     // Pregunta al usuario si desea confirmar la compra
     printf("\nConfirmar compra? (s/n): ");
     char confirmacion;
+    // Se lee la respuesta del usuario
     scanf(" %c", &confirmacion);
     getchar(); // Limpiar buffer
     if (confirmacion != 's' && confirmacion != 'S') {
@@ -842,6 +881,7 @@ void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPo
         presioneTeclaParaContinuar();
         return;
     }
+    producto = firstList(carrito);
     while (producto != NULL) {
         // Busca el producto en el contador de productos
         Pair* pairProd = searchMap(contadorProducto, producto->nombre);
@@ -866,13 +906,36 @@ void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPo
 
             // Aumenta el contador de vendidos
             prodInventario->vendidos += producto->stock;
-
-            // Aumenta el total de ventas
-            prodInventario->precioVenta += producto->precioVenta * producto->stock;
-
             // Agrega el producto al historial de compras
             pushBackList(compraHecha, prodInventario);
         }
+
+        Pair* pairNomb = searchMap(productosPorNombre, producto->nombre);
+        if (pairNomb != NULL) {
+            List* listaProductosNombre = (List*)pairNomb->value;
+            Producto* prodLista = firstList(listaProductosNombre);
+            while (prodLista != NULL) {
+                if (strcmp(prodLista->codigoBarras, producto->codigoBarras) == 0) {
+                    prodLista->vendidos = producto->stock;
+                    break;
+                }
+            prodLista = nextList(listaProductosNombre);
+            }
+        }
+
+        Pair* pairCategoria = searchMap(productosPorCategoria, producto->categoria);
+        if (pairCategoria != NULL) {
+            List* listaProductosCategoria = (List*)pairCategoria->value;
+            Producto* prodLista = firstList(listaProductosCategoria);
+            while (prodLista != NULL) {
+                if (strcmp(prodLista->codigoBarras, producto->codigoBarras) == 0) {
+                    prodLista->vendidos = producto->stock;
+                    break;
+                }
+            prodLista = nextList(listaProductosCategoria);
+            }
+        }
+
         *balance += (producto->precioVenta * producto->stock); // Actualiza el balance
         producto = nextList(carrito);
     }
