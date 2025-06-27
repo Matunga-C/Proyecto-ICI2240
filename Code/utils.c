@@ -68,7 +68,7 @@ char **leer_linea_csv(FILE *archivo, char separador) {
 }
 
 List *split_string(const char *str, const char *delim) {
-  List *result = createLIst();
+  List *result = createList();
   char *token = strtok((char *)str, delim);
 
   while (token != NULL) {

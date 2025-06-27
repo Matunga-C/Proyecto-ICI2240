@@ -175,7 +175,7 @@ void buscarPorNombre(HashMap *productosPorNombre) {
         // Si se encuentra el producto, se muestra su información
         // Se obtiene la lista de productos con ese nombre y se itera sobre ella para mostrar los detalles
         List *listaProductos = (List *)pair->value;
-        Producto *producto = (Producto *)firtsLIst(listaProductos);
+        Producto *producto = (Producto *)firstList(listaProductos);
         if (!producto) {
             puts("No se encontraron productos con ese nombre.");
             presioneTeclaParaContinuar();
@@ -227,7 +227,7 @@ void buscarPorCategoria(HashMap *productosPorCategoria){
     }
     // Si se encuentra la categoría, se obtiene la lista de productos y se itera sobre ella para mostrar los detalles
     List *listaProductos = (List *)pair->value;
-    Producto *producto = firtsLIst(listaProductos);
+    Producto *producto = firstList(listaProductos);
     if (!producto) {
         // Si la lista de productos está vacía, se muestra un mensaje de error
         printf("No se encontraron productos en la categoría '%s'.\n", categoria);
@@ -491,13 +491,13 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
     Pair* pairCat = searchMap(productosPorCategoria, producto->categoria);
     if (pairCat != NULL) {
         List* lista = (List*)pairCat->value;
-        Producto* prodLista = firtsLIst(lista);
+        Producto* prodLista = firstList(lista);
         int idx = 0;
         while (prodLista != NULL) {
             if (strcmp(prodLista->codigoBarras, codBarra) == 0) {
                 // Eliminar de la lista
                 // Mover current a la posición correcta
-                firtsLIst(lista);
+                firstList(lista);
                 for (int i = 0; i < idx; i++) nextList(lista);
                 popCurrentList(lista);
                 break;
@@ -506,7 +506,7 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
             idx++;
         }
         // Si la lista de productos en esa categoría queda vacía, se elimina la categoría del mapa
-        if (firtsLIst(lista) == NULL) {
+        if (firstList(lista) == NULL) {
             eraseMap(productosPorCategoria, producto->categoria);
         }
     }
@@ -514,13 +514,13 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
     Pair* pairNom = searchMap(productosPorNombre, producto->nombre);
     if (pairNom != NULL) {
         List* lista = (List*)pairNom->value;
-        Producto* prodLista = firtsLIst(lista);
+        Producto* prodLista = firstList(lista);
         int idx = 0;
         while (prodLista != NULL) {
             if (strcmp(prodLista->codigoBarras, codBarra) == 0) {
                 // Eliminar de la lista
                 // Mover current a la posición correcta
-                firtsLIst(lista);
+                firstList(lista);
                 for (int i = 0; i < idx; i++) nextList(lista);
                 popCurrentList(lista);
                 break;
@@ -529,7 +529,7 @@ void eliminarProducto(HashMap* productosPorCodigo, HashMap* productosPorCategori
             idx++;
         }
         // Si la lista de productos con ese nombre queda vacía, se elimina el nombre del mapa
-        if (firtsLIst(lista) == NULL) {
+        if (firstList(lista) == NULL) {
             eraseMap(productosPorNombre, producto->nombre);
         }
     }
@@ -585,11 +585,11 @@ void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria,
     printf("=== Reporte con sugerencias automáticas ===\n\n");
 
     HashMap* graph = createMap(2000);
-    List* compra = firtsLIst(historialCompras);
+    List* compra = firstList(historialCompras);
 
     // Paso 1: construir el grafo a partir de historial
     while (compra != NULL) {
-        Producto* prodA = firtsLIst(compra);
+        Producto* prodA = firstList(compra);
         while (prodA != NULL) {
             Producto* prodB = nextList(compra);
             while (prodB != NULL) {
@@ -655,7 +655,7 @@ void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCatego
             Pair *parCat = searchMap(productosPorCategoria, producto->categoria);
             if (parCat != NULL) {
                 List *lista = (List *)parCat->value;
-                Producto *candidato = firtsLIst(lista);
+                Producto *candidato = firstList(lista);
                 while (candidato != NULL) {
                     if (candidato != producto && (candidato->vendidos - producto->vendidos) <= 5 && strcmp(candidato->categoria, producto->categoria) == 0) {
                         printf("→ Sugerencia: crear combo con '%s' (vendidos: %d)\n",
@@ -726,13 +726,13 @@ void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito) {
 void eliminarDelCarrito(List *carrito) {
     limpiarPantalla();
     // Verifica si el carrito está vacío
-    if (firtsLIst(carrito) == NULL) {
+    if (firstList(carrito) == NULL) {
         printf("El carrito está vacío.\n");
         presioneTeclaParaContinuar();
         return;
     }
     int idx = 0, pos, total = 0;
-    Producto *prod = firtsLIst(carrito);
+    Producto *prod = firstList(carrito);
     // Muestra los productos en el carrito y solicita al usuario que ingrese el número del producto a eliminar
     printf("Productos en el carrito:\n");
     while (prod) {
@@ -751,7 +751,7 @@ void eliminarDelCarrito(List *carrito) {
         return;
     }
     // Volver al inicio y avanzar hasta la posición
-    firtsLIst(carrito);
+    firstList(carrito);
     for (int i = 1; i < pos; i++) nextList(carrito);
     // Elimina el producto actual del carrito y libera la memoria
     Producto *eliminado = popCurrentList(carrito);
@@ -764,7 +764,7 @@ void eliminarDelCarrito(List *carrito) {
 void verCarrito(List *carrito) {
     limpiarPantalla();
     //verifica si el carrito está vacío
-    Producto *prod = firtsLIst(carrito);
+    Producto *prod = firstList(carrito);
     if (!prod) {
         printf("El carrito está vacío.\n");
         presioneTeclaParaContinuar();
@@ -790,14 +790,14 @@ void verCarrito(List *carrito) {
 void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPorCodigo, HashMap* contadorProducto, long double *balance) {
     limpiarPantalla();
     // Verifica si el carrito está vacío
-    if (firtsLIst(carrito) == NULL) {
+    if (firstList(carrito) == NULL) {
         printf("El carrito está vacío. No se puede confirmar la compra.\n");
         presioneTeclaParaContinuar();
         return;
     }
 
     List* compraHecha = createList();
-    Producto* producto = firtsLIst(carrito);
+    Producto* producto = firstList(carrito);
 
     // Muestra los productos que se van a comprar
     printf("Productos en el carrito:\n");
@@ -855,7 +855,7 @@ void confirmarCompra(List* carrito, List* historialCompras, HashMap* productosPo
     pushBackList(historialCompras, compraHecha);
 
     // Limpia el carrito
-    while (firtsLIst(carrito) != NULL) {
+    while (firstList(carrito) != NULL) {
         Producto* prod = popCurrentList(carrito);
         free(prod); // Libera la memoria del producto
     }

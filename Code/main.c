@@ -42,6 +42,9 @@ int main() {
                         limpiarPantalla();
                         puts("Ingrese el balance inicial del inventario: ");
                         scanf("%Lf", &balance);
+                        getchar();
+                        printf("Balance inicial: %.2Lf\n", balance);
+                        
                         printf("Ingrese el nombre del archivo CSV para cargar el inventario: ");
                         char nombreArchivo[100];
                         fgets(nombreArchivo, sizeof(nombreArchivo), stdin);

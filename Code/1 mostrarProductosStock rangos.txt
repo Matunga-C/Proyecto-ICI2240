@@ -167,9 +167,4 @@ void insertarFrecuencia(HashMap *graph, char *nameA, char *nameB);
 
 globalizar productos
 
-arreglar funcion mostrar compra
-
-generar el balance 
-
 Generar Reporte mostrar el historial de compras
-
