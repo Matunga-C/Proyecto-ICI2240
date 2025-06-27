@@ -586,7 +586,7 @@ void guardarInventario(HashMap* productosPorCodigo) {
     size_t idx = 0;
     while (pair != NULL) {
         Producto* producto = (Producto*)pair->value;
-        fprintf(archivo, "%zu,%s,%s,%s,%s,%d,%.2f,%.2f,%.2f,%d\n",idx++,
+        fprintf(archivo, "%zu,%s,%s,%s,%s,%d,%.2f,%.2f,%.2f,%d\n", idx + 1,
             producto->nombre,
             producto->marca,
             producto->categoria,
@@ -620,7 +620,7 @@ void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria,
             return;
         }
         strcpy(nombreVenta->nombre, par->key);
-        nombreVenta->cantidadVentas =(int )par->value;
+        nombreVenta->cantidadVentas = *((int*)par->value);
         pushBackList(productosVendidos, nombreVenta);
         par = nextMap(contadorProducto);
     }
@@ -690,22 +690,19 @@ void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria,
 
     // Paso 3: sugerencias adicionales por ventas bajas
     printf("\n=== Sugerencias por ventas bajas ===\n");
-    sugerirPromociones(productosPorCodigo, productosPorCategoria);
+    sugerirPromociones(productosPorCodigo, productosPorCategoria, contadorProducto);
 
     presioneTeclaParaContinuar();
 }
 
 // Función que suguiere promociones para productos con bajas ventas
-void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria) {
-
+void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap* contadorProducto) {
     printf("=== Productos con pocas ventas: Sugerencias de promoción ===\n");
 
     const int umbral_ventas_bajas = 3; // Puedes ajustar este valor
-
     int i = 0;
-
     Pair *par = firstMap(productosPorCodigo);
-    while (par != NULL && i < 10) {
+    while (par != NULL && i < 10) { 
         Producto *producto = (Producto *)par->value;
 
         if (producto->vendidos <= umbral_ventas_bajas) {
@@ -713,10 +710,18 @@ void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCatego
             printf("Nombre: %s | Marca: %s | Vendidos: %d | Stock actual: %d\n",
                    producto->nombre, producto->marca, producto->vendidos, producto->stock);
 
-            // Buscar candidatos en la misma categoría
-            Pair *parCat = searchMap(productosPorCategoria, producto->categoria);
-            if (parCat != NULL) {
-                List *lista = (List *)parCat->value;
+            // Sugerencia de descuento
+            float relacion = producto->precioVenta / producto->precioCosto;
+            if (relacion > 1.5) {
+                printf("→ Sugerencia: aplicar 10%% de descuento.\n");
+            } else {
+                printf("→ Sugerencia: aplicar 5%% de descuento.\n");
+            }
+
+            // Buscar candidatos en la misma categoría para combos
+            Pair *pairCat = searchMap(productosPorCategoria, producto->categoria);
+            if (pairCat != NULL) {
+                List *lista = (List *)pairCat->value;
                 Producto *candidato = firstList(lista);
                 while (candidato != NULL) {
                     if (candidato != producto && (candidato->vendidos - producto->vendidos) <= 5 && strcmp(candidato->categoria, producto->categoria) == 0) {
@@ -730,10 +735,10 @@ void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCatego
 
             printf("→ Acción sugerida: aplicar descuento o visibilidad en la tienda.\n");
             printf("-----------------------------------------------------------\n");
+            i++;
         }
 
         par = nextMap(productosPorCodigo);
-        i++;
     }
 
     presioneTeclaParaContinuar();
@@ -890,6 +895,7 @@ void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPo
             *vendidos += producto->stock;
         } else {
             int* vendidos = malloc(sizeof(int));
+            *vendidos = 0;
             if (vendidos == NULL) {
                 printf("Error al asignar memoria.\n");
                 presioneTeclaParaContinuar();

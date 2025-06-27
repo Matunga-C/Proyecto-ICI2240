@@ -64,6 +64,6 @@ void generarReporte(HashMap *productosPorCodigo, HashMap *productosPorCategoria,
 
 void verCarrito(List *carrito);
 
-void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria);
+void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap* contadorProducto);
 
 #endif
