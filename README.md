@@ -79,7 +79,14 @@ Complejidad temporal: O(1), porque imprime un menú fijo.
 4. Guardar inventario: Guarda el inventario en "inventario_guardado.csv". Escribe un encabezado y recorre productosPorCodigo para guardar los datos de cada producto en formato CSV. En main.c, se usa en la opción 4 del menú de administrador.  
 Complejidad temporal: O(n), donde n es el número de productos.
 
-5. Generar reporte completo:
+5. Generar reporte completo:  Genera un reporte con los 3 productos más vendidos y combos frecuentes, usando contadorProducto y historialCompras. Ordena productos y combos, y sugiere promociones con sugerirPromociones, ofreciendo descuentos vía realizarDescuento.  
+Complejidad temporal: O(n * m²), donde n es el número de compras y m es el número de productos por compra.
+
+sugerirPromociones: Identifica hasta 10 productos con ventas ≤ 3 (se puede modificar mediante codigo) en productosPorCodigo, sugiere descuentos (10% o 5% según precio) y combos con productos de la misma categoría. Almacena en productosPocasVentas. 
+ Complejidad temporal: O(n * m), donde n es el número de productos y m es el tamaño de la lista de categoría.
+
+realizarDescuento: Aplica un descuento a un producto de productosPocasVentas seleccionado por el usuario, actualizando precios en los mapas productosPorCodigo, productosPorNombre y productosPorCategoria. 
+ Complejidad temporal: O(n + m), donde n es el tamaño de productosPocasVentas y m es el tamaño de las listas en los mapas.
 
 
 

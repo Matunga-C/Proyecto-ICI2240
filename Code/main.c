@@ -81,7 +81,7 @@ int main() {
                         }
                         break;
                     case 4: guardarInventario(productosPorCodigo); break;
-                    case 5: generarReporte(productosPorCodigo, productosPorCategoria, historialCompras, contadorProducto); break;
+                    case 5: generarReporte(productosPorCodigo, productosPorCategoria, productosPorNombre,historialCompras, contadorProducto); break;
                     default: printf("Opción no válida.\n");
                 }
             }
@@ -107,10 +107,9 @@ int main() {
     }
 
     // Liberar memoria
-    map_clean(productosPorCodigo);
-    map_clean(productosPorCategoria);
-    map_clean(contadorProducto);
     cleanList(carrito);
     cleanList(historialCompras);
+    map_clean(productosPorCodigo);
+    
     return 0;
 } 

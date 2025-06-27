@@ -1,8 +1,8 @@
 ID, Nombre, Marca, Categoria, PrecioVenta, PrecioMercado,PrecioCosto,Stock,CodigoBarras
-1,fideos,jumbo,comestibles,76.12,80.30,45.94,87,2353181394910
-2,te,cristal,comestibles,26.51,27.42,18.43,49,8694202239400
+1,fideos,jumbo,comestibles,7.61,80.30,45.94,87,2353181394910
+2,te,cristal,comestibles,26.51,27.42,18.43,39,8694202239400
 3,servilletas,savital,otros,54.76,57.95,33.61,80,3178851572893
-4,fideos,carozzi,comestibles,84.06,93.02,63.79,30,4974237201580
+4,fideos,carozzi,comestibles,84.06,93.02,63.79,10,4974237201580
 5,cafe,elite,comestibles,71.04,74.72,50.42,14,8986622965516
 6,esponja,san jorge,limpieza,18.98,20.49,12.10,58,9006729568797
 7,esponja,nivea,limpieza,79.75,84.94,58.47,36,3169822832649

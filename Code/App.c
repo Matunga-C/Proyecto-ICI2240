@@ -169,6 +169,9 @@ void buscarPorNombre(HashMap *productosPorNombre) {
     printf("Ingrese el nombre del producto a buscar: ");
     fgets(nombre, sizeof(nombre), stdin);
     nombre[strcspn(nombre, "\n")] = 0;
+    // Normalizar el nombre ingresado
+    trimWhitespace(nombre);
+    toLowerCase(nombre);
     // Busca el producto en el mapa de productosPorNombre
     Pair *pair = searchMap(productosPorNombre, nombre);
     if (pair != NULL) {
@@ -218,6 +221,9 @@ void buscarPorCategoria(HashMap *productosPorCategoria){
     printf("Ingrese la categoría de productos a listar: ");
     fgets(categoria, sizeof(categoria), stdin);
     categoria[strcspn(categoria, "\n")] = 0; // Eliminar salto de línea
+    // Normaliza la categoría ingresada
+    trimWhitespace(categoria);
+    toLowerCase(categoria);
     // Se busca la categoría en el mapa de productos por categoría, si no lo encuentra mustra un mensaje de error.
     Pair *pair = searchMap(productosPorCategoria, categoria);
     if (pair == NULL) {
@@ -873,7 +879,6 @@ void realizarDescuento(HashMap *productosPorCodigo, HashMap *productosPorCategor
         printf("No se encontró el producto.\n");
     }
 
-    presioneTeclaParaContinuar();
 }
 
 // Función que agrega un producto al carrito de compras
