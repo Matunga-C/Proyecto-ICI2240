@@ -22,7 +22,11 @@ typedef struct {
     int cantidadVentas;
 } NombreVenta;
 
-
+typedef struct{
+    char nombreA[51];
+    char nombreB[51];
+    int frecuencia;
+} combo;
 
 void presioneTeclaParaContinuar();
 
@@ -38,11 +42,11 @@ void menuModificarInventario();
 
 void mostrarVentasProductos(HashMap *productosPorCodigo);
 
-void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre, long double *balance);
+void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre);
 
 void buscarPorNombre(HashMap *productosPorNombre);
 
-void modificarStock(HashMap *productosPorCodigo, long double *balance, HashMap *productosPorCategoria, HashMap *productosPorNombre);
+void modificarStock(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre);
 
 void eliminarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre);
 
@@ -58,12 +62,14 @@ void agregarAlCarrito(HashMap *productosPorCodigo, List *carrito);
 
 void eliminarDelCarrito(List *carrito);
 
-void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorNombre ,HashMap *productosPorCategoria,HashMap *productosPorCodigo, HashMap *contadorProducto, long double *balance);
+void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorNombre ,HashMap *productosPorCategoria,HashMap *productosPorCodigo, HashMap *contadorProducto);
 
-void generarReporte(HashMap *productosPorCodigo, HashMap *productosPorCategoria, List *historialCompras, HashMap *contadorProducto);
+void generarReporte(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap* productosPorNombre,List *historialCompras, HashMap *contadorProducto);
 
 void verCarrito(List *carrito);
 
-void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap* contadorProducto);
+void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap* contadorProducto, List *productosPocasVentas);
+
+void realizarDescuento(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre ,HashMap* contadorProducto, List *productosPocasVentas);
 
 #endif

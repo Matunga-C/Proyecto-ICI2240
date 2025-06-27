@@ -367,7 +367,7 @@ void mostrarVentasProductos(HashMap *productosPorCodigo) {
 }
 
 //Función que registra un producto en el inventario
-void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre, long double *balance) {
+void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre) {
     limpiarPantalla();
     // Se crea un nuevo producto y se asigna memoria
     puts("=== Registro de Producto ===");
@@ -413,7 +413,6 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
     scanf("%f", &producto->precioCosto);
     getchar(); // Limpiar buffer
     producto->vendidos = 0; 
-    *balance -= (producto->precioCosto * producto->stock);
     // Se verifica si el producto ya existe en los mapas de productos por código, nombre y categoría
     // Si no existe, se inserta el producto en los mapas correspondientes
     if (searchMap(productosPorCodigo, producto->codigoBarras) == NULL) {
@@ -440,7 +439,7 @@ void registrarProducto(HashMap *productosPorCodigo, HashMap *productosPorCategor
     presioneTeclaParaContinuar();
 }
 //Función que modifica el stock de un producto existente en el inventario
-void modificarStock(HashMap* productosPorCodigo, long double *balance, HashMap* productosPorCategoria, HashMap* productosPorNombre) {
+void modificarStock(HashMap* productosPorCodigo, HashMap* productosPorCategoria, HashMap* productosPorNombre) {
     limpiarPantalla();
     char codBarra[51];
     // Se solicita al usuario que ingrese el código de barras del producto a modificar
@@ -463,9 +462,6 @@ void modificarStock(HashMap* productosPorCodigo, long double *balance, HashMap* 
     scanf("%d", &nuevoStock);
     getchar(); // Limpiar buffer
     producto->stock = nuevoStock;
-    if (nuevoStock > stockActual){
-        *balance -= (producto->precioCosto * (nuevoStock - stockActual));
-    }
     Pair* pairNombre = searchMap(productosPorNombre, producto->nombre);
     if (pairNombre != NULL) {
         List* listaProductos = (List*)pairNombre->value;
@@ -579,23 +575,22 @@ void guardarInventario(HashMap* productosPorCodigo) {
         return;
     }
     // Escribir encabezado
-    fprintf(archivo, "ID, Nombre,Marca,Categoria,CodigoBarras,Stock,PrecioVenta,PrecioMercado,PrecioCosto,Vendidos\n");
+    fprintf(archivo, "ID, Nombre, Marca, Categoria, PrecioVenta, PrecioMercado,PrecioCosto,Stock,CodigoBarras\n");
     //se traspasan todos los produtos del mapa productosPorCodigo al archivo CSV
     // Se itera sobre el mapa de productos por código y se escribe cada producto en el
     Pair* pair = firstMap(productosPorCodigo);
     size_t idx = 0;
     while (pair != NULL) {
         Producto* producto = (Producto*)pair->value;
-        fprintf(archivo, "%zu,%s,%s,%s,%s,%d,%.2f,%.2f,%.2f,%d\n", idx + 1,
+        fprintf(archivo, "%zu,%s,%s,%s,%.2f,%.2f,%.2f,%d,%s\n", idx + 1,
             producto->nombre,
             producto->marca,
             producto->categoria,
-            producto->codigoBarras,
-            producto->stock,
             producto->precioVenta,
             producto->precioMercado,
             producto->precioCosto,
-            producto->vendidos
+            producto->stock,
+            producto->codigoBarras
         );
         pair = nextMap(productosPorCodigo);
         idx++;
@@ -606,22 +601,43 @@ void guardarInventario(HashMap* productosPorCodigo) {
     presioneTeclaParaContinuar();
 }
 
-void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria, List* historialCompras, HashMap *contadorProducto) {
+//Función que genera un reporte completo de las ventas y productos más vendidos
+void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria, HashMap * productosPorNombre,List* historialCompras, HashMap *contadorProducto) {
     limpiarPantalla();
+    // Verifica si hay historial de compras
+    if (historialCompras == NULL || firstList(historialCompras) == NULL) {
+        printf("No hay historial de compras para generar un reporte.\n");
+        presioneTeclaParaContinuar();
+        return;
+    }
+    printf("=== Generación de Reporte Completo ===\n"); 
     List *productosVendidos = createList();
-
     // Iterar sobre el mapa contadorProducto
     Pair *par = firstMap(contadorProducto);
     while (par != NULL) {
-        NombreVenta *nombreVenta =  malloc(sizeof(NombreVenta));
-        if (nombreVenta == NULL) {
-            printf("Error al asignar memoria.\n");
-            presioneTeclaParaContinuar();
-            return;
+        // Buscar si ya existe un producto con el mismo nombre en la lista
+        NombreVenta *existente = NULL;
+        for (NombreVenta *nv = firstList(productosVendidos); nv != NULL; nv = nextList(productosVendidos)) {
+            if (strcmp(nv->nombre, par->key) == 0) {
+                existente = nv;
+                break;
+            }
         }
-        strcpy(nombreVenta->nombre, par->key);
-        nombreVenta->cantidadVentas = *((int*)par->value);
-        pushBackList(productosVendidos, nombreVenta);
+        if (existente) {
+            // Si ya existe, sumar las ventas
+            existente->cantidadVentas += *((int *)par->value);
+        } else {
+            // Si no existe, agregar un nuevo elemento
+            NombreVenta *nombreVenta = malloc(sizeof(NombreVenta));
+            if (nombreVenta == NULL) {
+                printf("Error al asignar memoria.\n");
+                presioneTeclaParaContinuar();
+                return;
+            }
+            strcpy(nombreVenta->nombre, par->key);
+            nombreVenta->cantidadVentas = *((int *)par->value);
+            pushBackList(productosVendidos, nombreVenta);
+        }
         par = nextMap(contadorProducto);
     }
 
@@ -636,20 +652,20 @@ void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria,
             }
         }
     }
-
     // Mostrar los 3 productos más vendidos
-    printf("Top 3 productos más vendidos:\n");
-    int contador = 0;
-    for (NombreVenta *producto = firstList(productosVendidos); producto != NULL && contador < 3; producto = nextList(productosVendidos)) {
-        printf("%d. %s - Ventas: %d\n", contador + 1, producto->nombre, producto->cantidadVentas);
-        contador++;
+    if (firstList(productosVendidos) != NULL) {
+        printf("Top 3 productos más vendidos:\n");
+        int contador = 0;
+        for (NombreVenta *producto = firstList(productosVendidos); producto != NULL && contador < 3; producto = nextList(productosVendidos)) {
+            printf("%d. %s - Ventas: %d\n", contador + 1, producto->nombre, producto->cantidadVentas);
+            contador++;
+        }
     }
-    printf("=== Reporte con sugerencias automáticas ===\n\n");
-
+    
     HashMap* graph = createMap(2000);
     List* compra = firstList(historialCompras);
 
-    // Paso 1: construir el grafo a partir de historial
+    // Construir el grafo a partir de historial
     while (compra != NULL) {
         Producto* prodA = firstList(compra);
         while (prodA != NULL) {
@@ -665,39 +681,75 @@ void generarReporte(HashMap* productosPorCodigo, HashMap *productosPorCategoria,
         }
         compra = nextList(historialCompras);
     }
+    //Combos frecuentes
+    List *productosConFrecuencias = createList();
+    if (firstMap(graph) != NULL) {
+        printf("=== Combos frecuentes detectados ===\n");
+        Pair *parNodo = firstMap(graph);
+        while (parNodo != NULL) {
+            char *nombreA = parNodo->key;
+            HashMap *adyacentes = (HashMap *)parNodo->value;
 
-    // Paso 2: mostrar combos frecuentes
-    printf("=== Combos frecuentes detectados ===\n");
-    Pair *parNodo = firstMap(graph);
-    while (parNodo != NULL) {
-        char *nombreA = parNodo->key;
-        HashMap *adyacentes = (HashMap *)parNodo->value;
+            // Aquí podrías buscar productoA si lo necesitas para calcular % co-ocurrencia
 
-        // Aquí podrías buscar productoA si lo necesitas para calcular % co-ocurrencia
+            Pair *parAdy = firstMap(adyacentes);
+            while (parAdy != NULL) {
+                char *nombreB = parAdy->key;
+                int frecuencia = *((int *)parAdy->value);
+                combo *comboFrecuente = malloc(sizeof(combo));
+                if (comboFrecuente == NULL) {
+                    printf("Error al asignar memoria para combo frecuente.\n");
+                    presioneTeclaParaContinuar();
+                    return;
+                }
+                strcpy(comboFrecuente->nombreA, nombreA);
+                strcpy(comboFrecuente->nombreB, nombreB);
+                comboFrecuente->frecuencia = frecuencia;
+                pushBackList(productosConFrecuencias, comboFrecuente);
+                //printf("- %s + %s → Comprados juntos %d veces\n", nombreA, nombreB, frecuencia);
 
-        Pair *parAdy = firstMap(adyacentes);
-        while (parAdy != NULL) {
-            char *nombreB = parAdy->key;
-            int frecuencia = *((int *)parAdy->value);
+                parAdy = nextMap(adyacentes);
+            }
 
-            printf("- %s + %s → Comprados juntos %d veces\n", nombreA, nombreB, frecuencia);
-
-            parAdy = nextMap(adyacentes);
+            parNodo = nextMap(graph);
         }
-
-        parNodo = nextMap(graph);
+        for (combo *i = firstList(productosConFrecuencias); i != NULL; i = nextList(productosConFrecuencias)) {
+            for (combo *j = nextList(productosConFrecuencias); j != NULL; j = nextList(productosConFrecuencias)) {
+                if (i->frecuencia < j->frecuencia) {
+                    // Intercambiar los elementos
+                    combo temp = *i;
+                    *i = *j;
+                    *j = temp;
+                }
+            }
+        }
+        // Mostrar los combos más frecuentes
+        int contador = 0;
+        for (combo *c = firstList(productosConFrecuencias); c != NULL && contador < 3; c = nextList(productosConFrecuencias)) {
+            printf("%d. %s + %s → Comprados juntos %d veces\n", contador + 1, c->nombreA, c->nombreB, c->frecuencia);
+            contador++;
+        }
     }
-
-    // Paso 3: sugerencias adicionales por ventas bajas
-    printf("\n=== Sugerencias por ventas bajas ===\n");
-    sugerirPromociones(productosPorCodigo, productosPorCategoria, contadorProducto);
+    List *productosPocasVentas = createList();
+    // Sugerencias adicionales por ventas bajas
+    sugerirPromociones(productosPorCodigo, productosPorCategoria, contadorProducto, productosPocasVentas);
+    printf("¿Quieres hacer un descuento a los productos con bajas ventas? (s/n): ");
+    char respuesta;
+    scanf(" %c", &respuesta);
+    getchar(); // Limpiar buffer
+    if (respuesta == 's' || respuesta == 'S') {
+        // Aplicar descuentos a productos con bajas ventas
+        realizarDescuento(productosPorCodigo, productosPorCategoria, productosPorNombre,contadorProducto, productosPocasVentas);
+    } else {
+        printf("No se aplicarán descuentos.\n");
+    }
 
     presioneTeclaParaContinuar();
 }
 
 // Función que suguiere promociones para productos con bajas ventas
-void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap* contadorProducto) {
-    printf("=== Productos con pocas ventas: Sugerencias de promoción ===\n");
+void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap* contadorProducto, List *productosPocasVentas) {
+    printf("\n\n=== Productos con pocas ventas: Sugerencias de promoción ===\n");
 
     const int umbral_ventas_bajas = 3; // Puedes ajustar este valor
     int i = 0;
@@ -707,11 +759,12 @@ void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCatego
 
         if (producto->vendidos <= umbral_ventas_bajas) {
             printf("\nProducto con bajas ventas detectado:\n");
-            printf("Nombre: %s | Marca: %s | Vendidos: %d | Stock actual: %d\n",
-                   producto->nombre, producto->marca, producto->vendidos, producto->stock);
+            printf("%d)Nombre: %s | Marca: %s | Vendidos: %d | Stock actual: %d\n",
+                   i + 1,producto->nombre, producto->marca, producto->vendidos, producto->stock);
 
             // Sugerencia de descuento
             float relacion = producto->precioVenta / producto->precioCosto;
+            pushBackList(productosPocasVentas, producto);
             if (relacion > 1.5) {
                 printf("→ Sugerencia: aplicar 10%% de descuento.\n");
             } else {
@@ -739,6 +792,85 @@ void sugerirPromociones(HashMap *productosPorCodigo, HashMap *productosPorCatego
         }
 
         par = nextMap(productosPorCodigo);
+    }
+
+    presioneTeclaParaContinuar();
+}
+
+void realizarDescuento(HashMap *productosPorCodigo, HashMap *productosPorCategoria, HashMap *productosPorNombre,HashMap* contadorProducto, List *productosPocasVentas) {
+    // Limpiar pantalla y mostrar los productos con pocas ventas
+    printf("Ingrese el número del producto al cual quiera aplicar un descuento: ");
+    int opcion;
+    scanf("%d", &opcion);
+    getchar(); // Limpiar buffer
+
+    // Verificar si la opción es válida
+    if (opcion <= 0 || opcion > list_size(productosPocasVentas)) {
+        printf("Opción inválida.\n");
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    // Iterar hasta el producto correspondiente
+    Producto *producto = firstList(productosPocasVentas);
+    for (int i = 1; i < opcion; i++) {
+        producto = nextList(productosPocasVentas);
+    }
+
+    // Aplicar el descuento al producto seleccionado
+    if (producto != NULL) {
+        printf("Producto seleccionado: %s | Precio actual: %.2f\n", producto->nombre, producto->precioVenta);
+        printf("Ingrese el porcentaje de descuento (ejemplo: 10 para 10%%): ");
+        float porcentajeDescuento;
+        scanf("%f", &porcentajeDescuento);
+        getchar(); // Limpiar buffer
+
+        if (porcentajeDescuento <= 0 || porcentajeDescuento > 100) {
+            printf("Porcentaje de descuento inválido.\n");
+            presioneTeclaParaContinuar();
+            return;
+        }
+
+        // Calcular el nuevo precio
+        float factorDescuento = 1 - (porcentajeDescuento / 100.0);
+        producto->precioVenta *= factorDescuento;
+
+        // Actualizar el precio en los mapas correspondientes
+        // Actualizar el precio en el mapa por código
+        Pair *pairCodigo = searchMap(productosPorCodigo, producto->codigoBarras);
+        if (pairCodigo != NULL) {
+            Producto *prodCodigo = (Producto *)pairCodigo->value;
+            prodCodigo->precioVenta = producto->precioVenta; // Actualizar precio en el mapa por código
+        }
+        // Actualizar el precio en el mapa por Nombre
+        Pair *pairNombre = searchMap(productosPorNombre, producto->nombre);
+        if (pairNombre != NULL) {
+            List *listaProductos = (List *)pairNombre->value;
+            Producto *prodLista = firstList(listaProductos);
+            while (prodLista != NULL) {
+                if (strcmp(prodLista->codigoBarras, producto->codigoBarras) == 0) {
+                    prodLista->precioVenta = producto->precioVenta; // Actualizar precio en la lista
+                    break;
+                }
+                prodLista = nextList(listaProductos);
+            }
+        }
+        // Actualizar el precio en el mapa por categoría
+        Pair *pairCategoria = searchMap(productosPorCategoria, producto->categoria);
+        if (pairCategoria != NULL) {
+            List *listaProductosCategoria = (List *)pairCategoria->value;
+            Producto *prodLista = firstList(listaProductosCategoria);
+            while (prodLista != NULL) {
+                if (strcmp(prodLista->codigoBarras, producto->codigoBarras) == 0) {
+                    prodLista->precioVenta = producto->precioVenta; // Actualizar precio en la lista de categoría
+                    break;
+                }
+                prodLista = nextList(listaProductosCategoria);
+            }
+        }
+        printf("Descuento aplicado. Nuevo precio: %.2f\n", producto->precioVenta);
+    } else {
+        printf("No se encontró el producto.\n");
     }
 
     presioneTeclaParaContinuar();
@@ -854,7 +986,7 @@ void verCarrito(List *carrito) {
 }
 
 //Función que confirma la compra de los productos en el carrito
-void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorNombre ,HashMap *productosPorCategoria,HashMap *productosPorCodigo, HashMap *contadorProducto, long double *balance) {
+void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPorNombre ,HashMap *productosPorCategoria,HashMap *productosPorCodigo, HashMap *contadorProducto) {
     limpiarPantalla();
     float totalCompra = 0.0;
     // Verifica si el carrito está vacío
@@ -942,13 +1074,11 @@ void confirmarCompra(List *carrito, List *historialCompras ,HashMap *productosPo
             }
         }
 
-        *balance += (producto->precioVenta * producto->stock); // Actualiza el balance
         producto = nextList(carrito);
     }
 
     // Agrega la compra hecha al historial de compras
     pushBackList(historialCompras, compraHecha);
-
     // Limpia el carrito
     while (firstList(carrito) != NULL) {
         Producto* prod = popCurrentList(carrito);

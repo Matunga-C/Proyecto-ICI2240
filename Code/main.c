@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "Map.h"
 #include "List.h"
 #include "utils.h"
@@ -9,7 +10,6 @@
 
 
 int main() {
-    static long double balance;
     HashMap *productosPorCodigo = createMap(2000);
     HashMap *productosPorNombre = createMap(2000);
     HashMap *productosPorCategoria = createMap(2000);
@@ -19,7 +19,7 @@ int main() {
     List *historialCompras = createList();
 
     int opcion, tipoUsuario;
-    long double Balance = 0.0;
+    bool primerIngreso = true;
     while (1) {
         printf("\n=== Sistema de Gestión de Inventario ===\n");
         printf("1. Administrador\n2. Cliente\n0. Salir\n");
@@ -40,19 +40,18 @@ int main() {
                 switch (opcion) {
                     case 1:
                         limpiarPantalla();
-                        puts("Ingrese el balance inicial del inventario: ");
-                        scanf("%Lf", &balance);
-                        getchar();
-                        printf("Balance inicial: %.2Lf\n", balance);
-                        
+                        if (primerIngreso != true) {
+                            puts("El inventario ya ha sido cargado.");
+                            puts("Si desea reiniciar el inventario, por favor cierre la aplicación y vuelva a abrirla.");
+                            presioneTeclaParaContinuar();
+                            break;
+                        }
                         printf("Ingrese el nombre del archivo CSV para cargar el inventario: ");
                         char nombreArchivo[100];
                         fgets(nombreArchivo, sizeof(nombreArchivo), stdin);
                         nombreArchivo[strcspn(nombreArchivo, "\n")] = 0; // Eliminar el salto de línea 
-                        map_reset(productosPorCodigo);
-                        map_reset(productosPorNombre);
-                        map_reset(productosPorCategoria);
                         cargarInventario(nombreArchivo, productosPorNombre, productosPorCodigo, productosPorCategoria); 
+                        if (firstMap(productosPorCodigo) != NULL) primerIngreso = false;
                         break;
                     case 2:
                         limpiarPantalla(); 
@@ -75,8 +74,8 @@ int main() {
                         scanf("%d", &opcionModificar);
                         getchar(); // Limpiar buffer
                         switch (opcionModificar) {
-                            case 1: registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre, &balance); break;
-                            case 2: modificarStock(productosPorCodigo, &balance, productosPorCategoria, productosPorNombre); break;
+                            case 1: registrarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
+                            case 2: modificarStock(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
                             case 3: eliminarProducto(productosPorCodigo, productosPorCategoria, productosPorNombre); break;
                             default: printf("Opción no válida.\n");
                         }
@@ -98,7 +97,7 @@ int main() {
                     case 1: agregarAlCarrito(productosPorCodigo, carrito); break;
                     case 2: eliminarDelCarrito(carrito); break;
                     case 3: verCarrito(carrito); break;
-                    case 4: confirmarCompra(carrito, historialCompras, productosPorNombre, productosPorCategoria, productosPorCodigo, contadorProducto, &balance); break;
+                    case 4: confirmarCompra(carrito, historialCompras, productosPorNombre, productosPorCategoria, productosPorCodigo, contadorProducto); break;
                     default: printf("Opción no válida.\n");
                 }
             }
