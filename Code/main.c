@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <windows.h> 
 #include "Map.h"
 #include "List.h"
 #include "utils.h"
@@ -49,8 +50,13 @@ int main() {
                         char nombreArchivo[100];
                         fgets(nombreArchivo, sizeof(nombreArchivo), stdin);
                         nombreArchivo[strcspn(nombreArchivo, "\n")] = 0; // Eliminar el salto de línea 
+                        limpiarPantalla();
+                        printf("Cargando inventario desde %s", nombreArchivo);
+                        puntoCarga();
+                        Sleep(2000); // Espera 2 segundo para mostrar mensaje
                         cargarInventario(nombreArchivo, productosPorNombre, productosPorCodigo, productosPorCategoria); 
                         if (firstMap(productosPorCodigo) != NULL) primerIngreso = false;
+                        limpiarPantalla();
                         break;
                     case 2:
                         limpiarPantalla(); 

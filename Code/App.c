@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 #include "Map.h"
 #include "List.h"
 #include "utils.h"
@@ -10,8 +11,9 @@ void limpiarPantalla() { system("clear"); }
 
 void presioneTeclaParaContinuar() {
     puts("Presione una tecla para continuar...");
-    getchar(); // Consume el '\n' del buffer de entrada
     getchar(); // Espera a que el usuario presione una tecla
+    limpiarPantalla();
+    Sleep(500);
 }
 
 
@@ -157,9 +159,10 @@ void cargarInventario(char* nameFile, HashMap *productosPorNombre, HashMap *prod
         }
     }
     //Se muestra un mensaje de éxito al cargar el inventario y se cierra el archivo
-    puts("Inventario cargado exitosamente.");
+    puts("Inventario cargado exitosamente");
+    Sleep(2000);
     fclose(file);
-    presioneTeclaParaContinuar();
+    //presioneTeclaParaContinuar();
 }
 
 //Función encargada de buscar un producto por su nombre

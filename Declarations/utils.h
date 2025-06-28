@@ -24,4 +24,6 @@ void trimWhitespace(char* str);
 
 void toLowerCase(char* str);
 
+void puntoCarga();
+
 #endif /* UTILS_H */

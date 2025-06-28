@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <windows.h>
 #include "utils.h"
 #include "List.h"
 #include "Map.h"
@@ -161,4 +162,20 @@ void trimWhitespace(char* str) {
 
     // Escribir el carácter nulo al final
     *(end + 1) = '\0';
+}
+
+void puntoCarga() {
+    for (int ciclo = 0; ciclo < 3; ciclo++) { // repite el ciclo 3 veces
+        for (int puntos = 1; puntos <= 3; puntos++) {
+            printf(".");
+            fflush(stdout);
+            Sleep(500); // 0.5 segundos entre cada punto
+        }
+        // Borra los 3 puntos
+        for (int puntos = 0; puntos < 3; puntos++) {
+            printf("\b \b"); // Borra los puntos
+            Sleep(100); // Espera antes de imprimir el siguiente ciclo
+            fflush(stdout);
+        }
+    }
 }
